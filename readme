@@ -1,0 +1,27 @@
+📜 README - Projet de Recherche Opérationnelle : Optimisation de la Distribution de GazCe projet vise à modéliser et à
+résoudre un problème de Flux à Coût Minimum (Minimum Cost Flow) dans un réseau de distribution de gaz, en utilisant la Programmation Linéaire (PL)
+et le solveur Gurobi. L'interface utilisateur est réalisée avec PySide6.1.
+ Décomposition du Problème:
+ Le problème consiste à acheminer une quantité demandée de gaz depuis des sources (nœuds à bilan positif, $b_i > 0$) vers des puits
+ (nœuds à bilan négatif, $b_i < 0$) en minimisant le coût total du transport, tout en respectant les capacités maximales des conduites.
+ 1.1. Identification des Variables de DécisionLes variables de décision représentent les quantités physiques que nous cherchons à déterminer :
+ SymboleTypeDéfinition$\mathbf{x_{ij}}$Continue ($\in \mathbb{R}^+$)Représente le débit (ou flux) de gaz circulant de l'Arc $i$ vers
+ l'Arc $j$.Le modèle actuel est donc une Programmation Linéaire (PL), car toutes les variables sont continues.2. Formulation
+ Mathématique du Modèle2.1. Fonction Objectif (À Minimiser)L'objectif principal est de minimiser le coût total du transport du gaz
+ dans le réseau.$$\text{Minimiser } Z = \sum_{(i,j) \in \text{Arcs}} c_{ij} \cdot x_{ij}$$SymboleDéfinition$Z$Coût total de
+ distribution.$c_{ij}$Coût unitaire de transport du gaz par l'Arc $(i, j)$ (saisi dans l'IHM).$x_{ij}$Débit de gaz circulant sur
+ l'Arc $(i, j)$ (variable de décision).2.2. ContraintesLe solveur doit respecter trois types de contraintes pour garantir une
+solution valide et réalisable :A. Contraintes de Conservation de Flux (Équilibre Nodal)Pour chaque nœud $i$ du réseau, le flux
+entrant moins le flux sortant doit être égal au bilan net de ce nœud ($b_i$).$$\sum_{j} x_{ji} - \sum_{j} x_{ij} = b_i, \quad \forall i \in \text{Nœuds}$$Si $b_i > 0$ (Source) :
+Le nœud est un point d'entrée net (production).Si $b_i < 0$ (Puits) : Le nœud est un point de sortie net (demande).
+Si $b_i = 0$ (Transit) : Le flux entrant doit être égal au flux sortant.B. Contraintes de CapacitéLe débit de gaz sur une
+conduite ne peut pas dépasser la capacité maximale ($u_{ij}$) de cette conduite (saisie dans l'IHM).
+$$0 \le x_{ij} \le u_{ij}, \quad \forall (i, j) \in \text{Arcs}$$C.
+Contraintes de Non-NégativitéLe flux de gaz ne peut pas être négatif.
+Cette contrainte est implicitement incluse dans la contrainte de Capacité par la borne inférieure ($0 \le x_{ij}$).
+3. Utilisation de l'ApplicationL'application est lancée via le script main.py.Saisie des Données : Dans l'onglet "1.
+Saisie des Données", l'utilisateur définit les nœuds (bilan $b_i$) et les arcs (capacité $u_{ij}$ et coût $c_{ij}$).
+Lancement : Cliquer sur LANCER L'OPTIMISATION (Gurobi).
+Résultats : L'onglet "2. Résultats et Analyse" affiche :Le Statut de la résolution (OPTIMAL ou IRRÉALISABLE).
+Le Coût Total Minimal (valeur $Z$ optimale).L'Acheminement Optimal (Arcs Actifs), qui liste les conduites utilisées et le
+débit ($x_{ij}$) correspondant.

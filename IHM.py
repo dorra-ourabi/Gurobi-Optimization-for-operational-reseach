@@ -258,11 +258,11 @@ class MainWindow(QMainWindow):
         elif "IRRÉALISABLE" in statut_text or "INFEASIBLE" in statut_text:
             # Statut IRRÉALISABLE : Message affiché en BLANC
             self.cost_label.setText(
-                f"Statut : <span style='color: white;'>🔴 IRRÉALISABLE (Vérifiez les capacités ou les bilans).</span>"
+                f"Statut : <span style='color: white;'> IRRÉALISABLE (Vérifiez les capacités ou les bilans).</span>"
             )
             self.path_label.setText("Réseau irréalisable. Aucun chemin valide trouvé.")
         else:
-            self.cost_label.setText(f"Statut : 🟡 **ÉCHEC** ({statut_text}).")
+            self.cost_label.setText(f"Statut :  ÉCHEC ({statut_text}).")
             self.path_label.setText("Erreur de calcul Gurobi.")
 
 
