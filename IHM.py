@@ -1,18 +1,17 @@
-# ihm_app.py
 import sys
 from PySide6.QtWidgets import (
-    QMainWindow, QWidget, QVBoxLayout, QHBoxLayout,
-    QPushButton, QLabel, QTabWidget, QMessageBox, QHeaderView, QLineEdit, QApplication,
-    QTableWidget
+    QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout,
+    QPushButton, QLabel, QTabWidget, QLineEdit, QTableWidget, QTableWidgetItem,
+    QHeaderView, QGroupBox, QCheckBox, QScrollArea, QMessageBox
 )
-from PySide6.QtCore import QThread, Signal
-from PySide6.QtGui import QColor
+from PySide6.QtCore import Qt, QThread, Signal
+from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
+import matplotlib.pyplot as plt
+import networkx as nx
 
-# Assurez-vous que modele_gaz.py est dans le même répertoire
-from EnergiePl import ModeleGaz
+from EnergiePl import ModeleGaz  # ton modèle enrichi
 
-
-# --- THREAD DE RÉSOLUTION ---
+# --- Thread de résolution ---
 class SolverWorker(QThread):
     result_ready = Signal(dict)
     error_signal = Signal(str)
@@ -25,258 +24,330 @@ class SolverWorker(QThread):
         try:
             modele = ModeleGaz(self.donnees)
             resultats = modele.resoudre()
-            if 'Erreur' in resultats.get('statut_text', '') or "Gurobi" in resultats.get('statut_text', ''):
+            if "Erreur" in resultats.get('statut_text','') or "IRRÉALISABLE" in resultats.get('statut_text',''):
                 self.error_signal.emit(resultats['statut_text'])
             else:
                 self.result_ready.emit(resultats)
         except Exception as e:
-            self.error_signal.emit(f"Erreur de résolution inattendue : {str(e)}")
+            self.error_signal.emit(f"Erreur inattendue : {str(e)}")
 
-
-# --- FENÊTRE PRINCIPALE (IHM) ---
+# --- IHM principale ---
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Projet RO - Flux à Coût Minimum (PL)")
-        self.setGeometry(100, 100, 1100, 800)
-
+        self.setWindowTitle("Optimisation Réseau Gaz")
+        self.setGeometry(50, 50, 1600, 900)
         self.central_widget = QWidget()
         self.setCentralWidget(self.central_widget)
         self.layout = QVBoxLayout(self.central_widget)
 
-        self.num_nodes = 0
-        self.num_arcs = 0
-
-        self.init_ui()
-        self.worker = None
-
-    def init_ui(self):
         self.tabs = QTabWidget()
         self.layout.addWidget(self.tabs)
 
-        self.btn_solve = QPushButton("LANCER L'OPTIMISATION (Gurobi)")
+        self.btn_solve = QPushButton("🚀 Lancer l'optimisation")
         self.btn_solve.setFixedHeight(50)
-        self.btn_solve.setStyleSheet("background-color: #4CAF50; color: white; font-size: 16pt; font-weight: bold;")
         self.btn_solve.clicked.connect(self.lancer_resolution)
-        self.btn_solve.setEnabled(False)
         self.layout.addWidget(self.btn_solve)
 
-        self.data_tab = QWidget()
-        self.tabs.addTab(self.data_tab, "1. Saisie des Données")
+        self.setup_config_tab()
         self.setup_data_tab()
-
-        self.results_tab = QWidget()
-        self.tabs.addTab(self.results_tab, "2. Résultats et Analyse")
         self.setup_results_tab()
 
-    def setup_data_tab(self):
-        data_layout = QVBoxLayout(self.data_tab)
-        size_group = QWidget()
-        size_layout = QHBoxLayout(size_group)
-        size_layout.addWidget(QLabel("Nombre de Nœuds :"))
-        self.input_nodes = QLineEdit("3")
-        size_layout.addWidget(self.input_nodes)
-        size_layout.addWidget(QLabel("Nombre d'Arcs :"))
-        self.input_arcs = QLineEdit("3")
-        size_layout.addWidget(self.input_arcs)
+        self.worker = None
 
-        self.btn_generate = QPushButton("Générer les Tableaux de Saisie")
-        self.btn_generate.clicked.connect(self.generate_tables)
-        size_layout.addWidget(self.btn_generate)
-        data_layout.addWidget(size_group)
-
-        self.tables_container = QWidget()
-        self.tables_layout = QVBoxLayout(self.tables_container)
-        data_layout.addWidget(self.tables_container)
-
+        # --- Pré-remplissage pour test ---
+        self.input_nodes.setText("3")
+        self.input_arcs.setText("3")
         self.generate_tables()
+        # Nœuds
+        self.node_table.setItem(0,1,QTableWidgetItem("50"))
+        self.node_table.setItem(1,1,QTableWidgetItem("-30"))
+        self.node_table.setItem(2,1,QTableWidgetItem("-20"))
+        # Arcs
+        self.arc_table.setItem(0,0,QTableWidgetItem("N1"))
+        self.arc_table.setItem(0,1,QTableWidgetItem("N2"))
+        self.arc_table.setItem(0,2,QTableWidgetItem("50"))
+        self.arc_table.setItem(0,3,QTableWidgetItem("1"))
+        self.arc_table.setItem(1,0,QTableWidgetItem("N1"))
+        self.arc_table.setItem(1,1,QTableWidgetItem("N3"))
+        self.arc_table.setItem(1,2,QTableWidgetItem("50"))
+        self.arc_table.setItem(1,3,QTableWidgetItem("1"))
+        self.arc_table.setItem(2,0,QTableWidgetItem("N2"))
+        self.arc_table.setItem(2,1,QTableWidgetItem("N3"))
+        self.arc_table.setItem(2,2,QTableWidgetItem("30"))
+        self.arc_table.setItem(2,3,QTableWidgetItem("1"))
 
+    # --- Onglet Configuration ---
+    def setup_config_tab(self):
+        self.config_tab = QWidget()
+        self.tabs.addTab(self.config_tab, "⚙️ Configuration")
+        layout = QVBoxLayout(self.config_tab)
+
+        group = QGroupBox("Fonctionnalités Avancées")
+        g_layout = QVBoxLayout()
+
+        self.cb_fixed = QCheckBox("Coûts fixes")
+        self.cb_mincap = QCheckBox("Capacités minimales")
+        self.cb_press = QCheckBox("Pressions min/max")
+        self.cb_losses = QCheckBox("Pertes de charge")
+        self.cb_diam = QCheckBox("Diamètre / vitesse")
+        self.cb_red = QCheckBox("Redondance nœuds critiques")
+
+        for cb in [self.cb_fixed,self.cb_mincap,self.cb_press,self.cb_losses,self.cb_diam,self.cb_red]:
+            g_layout.addWidget(cb)
+
+        group.setLayout(g_layout)
+        layout.addWidget(group)
+
+        # Vitesse max globale
+        hbox = QHBoxLayout()
+        hbox.addWidget(QLabel("Vitesse maximale (m/s) :"))
+        self.input_vmax = QLineEdit("20.0")
+        hbox.addWidget(self.input_vmax)
+        layout.addLayout(hbox)
+        layout.addStretch()
+
+    # --- Onglet Données ---
+    def setup_data_tab(self):
+        self.data_tab = QWidget()
+        self.tabs.addTab(self.data_tab, "📊 Données réseau")
+        layout = QVBoxLayout(self.data_tab)
+
+        # Nombre de noeuds/arcs
+        hbox = QHBoxLayout()
+        hbox.addWidget(QLabel("Nombre de nœuds :"))
+        self.input_nodes = QLineEdit("3")
+        hbox.addWidget(self.input_nodes)
+        hbox.addWidget(QLabel("Nombre d'arcs :"))
+        self.input_arcs = QLineEdit("3")
+        hbox.addWidget(self.input_arcs)
+        self.btn_generate = QPushButton("Générer tables")
+        self.btn_generate.clicked.connect(self.generate_tables)
+        hbox.addWidget(self.btn_generate)
+        layout.addLayout(hbox)
+
+        scroll = QScrollArea()
+        scroll.setWidgetResizable(True)
+        self.scroll_content = QWidget()
+        self.scroll_layout = QVBoxLayout(self.scroll_content)
+        scroll.setWidget(self.scroll_content)
+        layout.addWidget(scroll)
+
+    # Génération des tableaux dynamiques
     def generate_tables(self):
-        while self.tables_layout.count():
-            item = self.tables_layout.takeAt(0)
-            widget = item.widget()
-            if widget:
-                widget.deleteLater()
+        for i in reversed(range(self.scroll_layout.count())):
+            w = self.scroll_layout.itemAt(i).widget()
+            if w:
+                w.setParent(None)
 
         try:
             self.num_nodes = int(self.input_nodes.text())
             self.num_arcs = int(self.input_arcs.text())
-            if self.num_nodes <= 0 or self.num_arcs <= 0:
-                raise ValueError("Les nombres de nœuds et d'arcs doivent être > 0.")
-        except ValueError as e:
-            QMessageBox.critical(self, "Erreur de Saisie", f"Veuillez entrer des nombres entiers valides. {str(e)}")
-            self.btn_solve.setEnabled(False)
+        except:
+            QMessageBox.critical(self,"Erreur","Nombre de nœuds/arcs invalide")
             return
 
-        self.tables_layout.addWidget(QLabel("<h2>1. Nœuds et Bilans</h2>"))
-        self.node_table = QTableWidget(self.num_nodes, 2)
-        self.node_table.setHorizontalHeaderLabels(["Nom du Nœud", "Bilan net (b_i)"])
+        # --- Tableau nœuds ---
+        node_cols = ["Nom","Bilan"]
+        if self.cb_press.isChecked():
+            node_cols += ["P_min","P_max"]
+        if self.cb_red.isChecked():
+            node_cols += ["Critique"]
+
+        self.node_table = QTableWidget(self.num_nodes,len(node_cols))
+        self.node_table.setHorizontalHeaderLabels(node_cols)
         self.node_table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
-        self.tables_layout.addWidget(self.node_table)
+        for r in range(self.num_nodes):
+            self.node_table.setItem(r,0,QTableWidgetItem(f"N{r+1}"))
+            self.node_table.setItem(r,1,QTableWidgetItem("0"))
+            col=2
+            if self.cb_press.isChecked():
+                self.node_table.setItem(r,col,QTableWidgetItem("2.0"))
+                self.node_table.setItem(r,col+1,QTableWidgetItem("8.0"))
+                col+=2
+            if self.cb_red.isChecked():
+                self.node_table.setItem(r,col,QTableWidgetItem("0"))
+        self.scroll_layout.addWidget(QLabel("Nœuds et bilans"))
+        self.scroll_layout.addWidget(self.node_table)
 
-        self.tables_layout.addWidget(QLabel("<h2>2. Arcs et Paramètres</h2>"))
-        self.arc_table = QTableWidget(self.num_arcs, 4)
-        self.arc_table.setHorizontalHeaderLabels(
-            ["Nœud Départ (i)", "Nœud Arrivée (j)", "Capacité max (u_ij)", "Coût Unitaire (c_ij)"])
+        # --- Tableau arcs ---
+        arc_cols = ["Départ","Arrivée","Capacité","Cout_var"]
+        self.arc_table = QTableWidget(self.num_arcs,len(arc_cols))
+        self.arc_table.setHorizontalHeaderLabels(arc_cols)
         self.arc_table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
-        self.tables_layout.addWidget(self.arc_table)
+        for r in range(self.num_arcs):
+            self.arc_table.setItem(r,0,QTableWidgetItem("N1"))
+            self.arc_table.setItem(r,1,QTableWidgetItem("N2"))
+            self.arc_table.setItem(r,2,QTableWidgetItem("100"))
+            self.arc_table.setItem(r,3,QTableWidgetItem("1.0"))
+        self.scroll_layout.addWidget(QLabel("Arcs"))
+        self.scroll_layout.addWidget(self.arc_table)
 
-        self.btn_solve.setEnabled(True)
+        # --- Paramètres avancés arcs ---
+        adv_cols=[]
+        if self.cb_fixed.isChecked(): adv_cols.append("Cout fixe")
+        if self.cb_mincap.isChecked(): adv_cols.append("Capacité min")
+        if self.cb_losses.isChecked(): adv_cols += ["Longueur","Perte"]
+        if self.cb_diam.isChecked(): adv_cols.append("Diamètre")
+        if adv_cols:
+            self.adv_table = QTableWidget(self.num_arcs,len(adv_cols))
+            self.adv_table.setHorizontalHeaderLabels(adv_cols)
+            self.adv_table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+            for r in range(self.num_arcs):
+                for c in range(len(adv_cols)):
+                    self.adv_table.setItem(r,c,QTableWidgetItem("0"))
+                    if adv_cols[c]=="Diamètre": self.adv_table.setItem(r,c,QTableWidgetItem("0.5"))
+                    if adv_cols[c]=="Longueur": self.adv_table.setItem(r,c,QTableWidgetItem("10"))
+                    if adv_cols[c]=="Perte": self.adv_table.setItem(r,c,QTableWidgetItem("0.01"))
+            self.scroll_layout.addWidget(QLabel("Paramètres avancés"))
+            self.scroll_layout.addWidget(self.adv_table)
 
+    # --- Onglet Résultats ---
     def setup_results_tab(self):
-        results_layout = QVBoxLayout(self.results_tab)
+        self.results_tab = QWidget()
+        self.tabs.addTab(self.results_tab,"📈 Résultats")
+        layout = QVBoxLayout(self.results_tab)
+        self.label_status = QLabel("Statut : en attente")
+        layout.addWidget(self.label_status)
+        self.label_cost = QLabel("")
+        layout.addWidget(self.label_cost)
+        self.results_table = QTableWidget(0,4)
+        self.results_table.setHorizontalHeaderLabels(["Arc","Debit","Etat","Cout"])
+        self.results_table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+        layout.addWidget(self.results_table)
 
-        # Titre général
-        results_layout.addWidget(QLabel("<h2>Résultats de l'Optimisation</h2>"))
+        # Graphe du réseau
+        self.fig, self.ax = plt.subplots()
+        self.canvas = FigureCanvas(self.fig)
+        layout.addWidget(self.canvas)
 
-        # Coût Total et Statut (Couleur de texte par défaut: Blanc)
-        self.cost_label = QLabel("Statut : En attente de lancement...")
-        self.cost_label.setStyleSheet("font-size: 14pt; color: white;")
-        results_layout.addWidget(self.cost_label)
-
-        # Acheminement Optimal (Gardé et stylisé en blanc sans fond bleu)
-        results_layout.addWidget(QLabel("<h3>Acheminement Optimal (Arcs Actifs)</h3>"))
-        self.path_label = QLabel("Aucun flux calculé.")
-        self.path_label.setWordWrap(True)
-
-        # Style : Texte blanc, suppression du fond bleu, et conservation du cadre.
-        self.path_label.setStyleSheet(
-            "font-size: 12pt; font-weight: bold; padding: 5px; background-color: none; border: 1px solid #c0d0e0; color: white;")
-        results_layout.addWidget(self.path_label)
-
-        # Les sections "Plan de Débit Optimal" et "Visualisation Graphique" ont été supprimées.
-        self.debit_table = None
-
+    # --- Collecte des données ---
     def collecter_donnees(self):
-        # La logique de collecte est conservée pour l'envoi des données à Gurobi
         try:
-            Arcs, Cout_Var, Capacite = [], {}, {}
+            Arcs,Cout_Var,Capacite={}, {}, {}
+            Cout_Fixe,Cap_Min={}, {}
+            Longueur,Perte={}, {}
+            Diametre={}
+            Noeuds,Bilan=[], {}
+            Pression_Min,Pression_Max={}, {}
+            Noeuds_Critiques=[]
 
-            for row in range(self.arc_table.rowCount()):
-                items = [self.arc_table.item(row, col) for col in range(4)]
-                if not all(items) or any(item.text().strip() == "" for item in items):
-                    raise ValueError(f"Ligne d'arc {row + 1} incomplète. Toutes les cellules doivent être remplies.")
-                u, v = items[0].text(), items[1].text()
-                cap = float(items[2].text().replace(',', '.'))
-                cost_var = float(items[3].text().replace(',', '.'))
-                if cap <= 0 or cost_var < 0:
-                    raise ValueError(f"Capacité doit être > 0 et Coût >= 0 (Ligne d'arc {row + 1}).")
-                arc = (u, v)
-                Arcs.append(arc)
-                Capacite[arc] = cap
-                Cout_Var[arc] = cost_var
+            # arcs
+            for r in range(self.arc_table.rowCount()):
+                u=self.arc_table.item(r,0).text().strip()
+                v=self.arc_table.item(r,1).text().strip()
+                cap=float(self.arc_table.item(r,2).text())
+                cost=float(self.arc_table.item(r,3).text())
+                Arcs[(u,v)]=(u,v)
+                Capacite[(u,v)]=cap
+                Cout_Var[(u,v)]=cost
+                Cout_Fixe[(u,v)]=0
+                Cap_Min[(u,v)]=0
+                Longueur[(u,v)]=10
+                Perte[(u,v)]=0
+                Diametre[(u,v)]=0.5
 
-            Noeuds, Bilan = [], {}
-            for row in range(self.node_table.rowCount()):
-                node_item = self.node_table.item(row, 0)
-                bilan_item = self.node_table.item(row, 1)
-                if not node_item or not bilan_item or node_item.text().strip() == "" or bilan_item.text().strip() == "":
-                    raise ValueError(f"Ligne de nœud {row + 1} incomplète. Le nom et le bilan doivent être remplis.")
-                node = node_item.text()
-                bilan_val = float(bilan_item.text().replace(',', '.'))
-                Noeuds.append(node)
-                Bilan[node] = bilan_val
+            # avancés
+            if hasattr(self,'adv_table'):
+                for r in range(self.adv_table.rowCount()):
+                    c=0
+                    if self.cb_fixed.isChecked():
+                        Cout_Fixe[list(Arcs.keys())[r]]=float(self.adv_table.item(r,c).text());c+=1
+                    if self.cb_mincap.isChecked():
+                        Cap_Min[list(Arcs.keys())[r]]=float(self.adv_table.item(r,c).text());c+=1
+                    if self.cb_losses.isChecked():
+                        Longueur[list(Arcs.keys())[r]]=float(self.adv_table.item(r,c).text());c+=1
+                        Perte[list(Arcs.keys())[r]]=float(self.adv_table.item(r,c).text());c+=1
+                    if self.cb_diam.isChecked():
+                        Diametre[list(Arcs.keys())[r]]=float(self.adv_table.item(r,c).text())
 
-            for u, v in Arcs:
-                if u not in Noeuds or v not in Noeuds:
-                    raise ValueError(f"Un nœud de l'arc ({u} -> {v}) n'est pas défini dans la liste des Nœuds.")
+            # noeuds
+            for r in range(self.node_table.rowCount()):
+                n=self.node_table.item(r,0).text().strip()
+                Bilan[n]=float(self.node_table.item(r,1).text())
+                Noeuds.append(n)
+                c=2
+                if self.cb_press.isChecked():
+                    Pression_Min[n]=float(self.node_table.item(r,c).text());c+=1
+                    Pression_Max[n]=float(self.node_table.item(r,c).text());c+=1
+                if self.cb_red.isChecked():
+                    crit=int(self.node_table.item(r,c).text());c+=1
+                    if crit>0: Noeuds_Critiques.append(n)
 
-            somme_bilan = sum(Bilan.values())
-            if abs(somme_bilan) > 1e-6:
-                raise ValueError(f"Déséquilibre de Flux : Bilan net non nul : {somme_bilan:,.2f}. IRRÉALISABLE.")
+            # dictionnaire final
+            donnees={'Noeuds':Noeuds,'Arcs':list(Arcs.keys()),'Bilan':Bilan,
+                     'Cout_Var':Cout_Var,'Capacite':Capacite}
+            if self.cb_fixed.isChecked(): donnees['Cout_Fixe']=Cout_Fixe
+            if self.cb_mincap.isChecked(): donnees['Capacite_Min']=Cap_Min
+            if self.cb_press.isChecked():
+                donnees['Pression_Min']=Pression_Min
+                donnees['Pression_Max']=Pression_Max
+            if self.cb_losses.isChecked():
+                donnees['Longueur']=Longueur
+                donnees['Perte_Charge']=Perte
+            if self.cb_diam.isChecked():
+                donnees['Diametre']=Diametre
+                donnees['Vitesse_Max']=float(self.input_vmax.text())
+            if self.cb_red.isChecked():
+                donnees['Contrainte_Redondance']=True
+                donnees['Noeuds_Critiques']=Noeuds_Critiques
 
-            return {
-                'Noeuds': Noeuds, 'Arcs': Arcs, 'Bilan': Bilan,
-                'Cout_Var': Cout_Var, 'Capacite': Capacite,
-            }
-
-        except ValueError as e:
-            QMessageBox.critical(self, "Erreur de Données", str(e))
-            return None
+            return donnees
         except Exception as e:
-            QMessageBox.critical(self, "Erreur Inattendue", f"Veuillez d'abord générer les tableaux. {str(e)}")
+            QMessageBox.critical(self,"Erreur","Données invalides: "+str(e))
             return None
 
+    # --- Lancer résolution ---
     def lancer_resolution(self):
         donnees = self.collecter_donnees()
-        if donnees is None: return
-
+        if not donnees: return
         self.btn_solve.setEnabled(False)
-        self.btn_solve.setText("Résolution en cours...")
-        self.cost_label.setText("Statut : Résolution en cours par Gurobi...")
-        self.path_label.setText("Calcul des chemins...")
-        self.tabs.setCurrentIndex(1)
-
+        self.label_status.setText("Statut : Résolution en cours...")
         self.worker = SolverWorker(donnees)
         self.worker.result_ready.connect(self.afficher_resultats)
         self.worker.error_signal.connect(self.handle_error)
         self.worker.start()
 
-    def handle_error(self, message):
-        QMessageBox.critical(self, "Erreur Critique", message)
+    def handle_error(self,msg):
+        QMessageBox.critical(self,"Erreur",msg)
+        self.label_status.setText("Statut : ERREUR")
         self.btn_solve.setEnabled(True)
-        self.btn_solve.setText("LANCER L'OPTIMISATION (Gurobi)")
-        self.cost_label.setText(f"Statut : ERREUR (Voir fenêtre d'erreur)")
-        self.path_label.setText("Calcul échoué.")
 
-    def afficher_resultats(self, resultats):
+    # --- Affichage résultats ---
+    def afficher_resultats(self,res):
         self.btn_solve.setEnabled(True)
-        self.btn_solve.setText("LANCER L'OPTIMISATION (Gurobi)")
+        self.label_status.setText(f"Statut : {res.get('statut_text')}")
+        if 'cout_total' in res:
+            self.label_cost.setText(f"Coût total : {res['cout_total']:.2f} €")
 
-        statut_text = resultats.get('statut_text')
+        debits=res.get('debits_optimaux',{})
+        arcs_act=res.get('arcs_actifs',{})
+        self.results_table.setRowCount(len(debits))
+        for r,(arc,val) in enumerate(debits.items()):
+            self.results_table.setItem(r,0,QTableWidgetItem(f"{arc[0]}→{arc[1]}"))
+            self.results_table.setItem(r,1,QTableWidgetItem(f"{val:.2f}"))
+            etat="✓" if (arc in arcs_act and arcs_act[arc]>0.5) else "✗"
+            self.results_table.setItem(r,2,QTableWidgetItem(etat))
+            cout = val*self.collecter_donnees()['Cout_Var'][arc]
+            if arc in arcs_act and arcs_act[arc]>0.5:
+                cout += self.collecter_donnees().get('Cout_Fixe',{}).get(arc,0)
+            self.results_table.setItem(r,3,QTableWidgetItem(f"{cout:.2f}"))
 
-        if statut_text == "OPTIMAL":
-            cout_total = resultats.get('cout_total', 0.0)
+        # --- Graphe ---
+        self.ax.clear()
+        G=nx.DiGraph()
+        for n in self.collecter_donnees()['Noeuds']:
+            G.add_node(n)
+        for arc in debits:
+            G.add_edge(arc[0],arc[1])
+        colors=['green' if (arc in arcs_act and arcs_act[arc]>0.5) else 'red' for arc in debits]
+        pos=nx.spring_layout(G)
+        nx.draw(G,pos,ax=self.ax,node_color='lightblue',with_labels=True,arrows=True,edge_color=colors,arrowstyle='-|>',arrowsize=20)
+        self.canvas.draw()
 
-            # Statut OPTIMAL : Coût affiché en BLANC
-            self.cost_label.setText(
-                f"Statut : 🟢 OPTIMAL | Coût Total Minimal: <span style='color: white; font-weight: bold;'>{cout_total:,.2f} €</span>"
-            )
-
-            debits = resultats['debits_optimaux']
-
-            # --- CALCUL ET AFFICHAGE DES CHEMINS ACTIFS ---
-            active_paths = []
-            routing_map = {}
-
-            for (u, v), debit in debits.items():
-                if debit > 1e-6:
-                    if u not in routing_map:
-                        routing_map[u] = []
-                    # Formatage: Nœud Départ -> Nœud Arrivée (Débit)
-                    routing_map[u].append(f"-> {v} ({debit:,.2f})")
-
-            if routing_map:
-                for u, destinations in routing_map.items():
-                    active_paths.append(f"De {u} :{' '.join(destinations)}")
-                path_text = "<br>".join(active_paths)
-                self.path_label.setText(path_text)
-            else:
-                self.path_label.setText("Le modèle est optimal, mais le flux total requis est nul.")
-            # ---------------------------------------------------------
-
-        elif "IRRÉALISABLE" in statut_text or "INFEASIBLE" in statut_text:
-            # Statut IRRÉALISABLE : Message affiché en BLANC
-            self.cost_label.setText(
-                f"Statut : <span style='color: white;'> IRRÉALISABLE (Vérifiez les capacités ou les bilans).</span>"
-            )
-            self.path_label.setText("Réseau irréalisable. Aucun chemin valide trouvé.")
-        else:
-            self.cost_label.setText(f"Statut :  ÉCHEC ({statut_text}).")
-            self.path_label.setText("Erreur de calcul Gurobi.")
-
-
-
-# Vérifie si le script est exécuté directement
-if __name__ == '__main__':
-    # 1. Crée l'instance de l'application PySide6
+# --- MAIN ---
+if __name__=="__main__":
     app = QApplication(sys.argv)
-
-    # 2. Crée une instance de la fenêtre principale (IHM)
     window = MainWindow()
-
-    # 3. Affiche la fenêtre à l'écran
     window.show()
-
-    # 4. Lance la boucle d'événements de l'application
     sys.exit(app.exec())

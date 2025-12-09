@@ -5,14 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3c714213-9832-42cc-8b51-f3020fe2eb94" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/IHM.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/aprlication/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/aprlication/form.ui" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/aprlication/pyproject.toml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/aprlication/requirements.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/aprlication/widget.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/EnergiePl.py" beforeDir="false" afterPath="$PROJECT_DIR$/EnergiePl.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -95,7 +88,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1765121874506</updated>
-      <workItem from="1765121875860" duration="20315000" />
+      <workItem from="1765121875860" duration="29799000" />
     </task>
     <servers />
   </component>
