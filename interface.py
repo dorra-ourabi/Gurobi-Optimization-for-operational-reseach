@@ -387,7 +387,7 @@ class ProfessionalHub(QMainWindow):
     def open_lab_experiments(self):
         """Ouvre le projet Ghaida - Expériences laboratoire"""
         try:
-            from Ghaida.main import MainWindow
+            from Ghaida.mkp_lab_exp import MainWindow
 
             if "lab" not in self.projects_windows or not self.projects_windows["lab"].isVisible():
                 self.projects_windows["lab"] = MainWindow()

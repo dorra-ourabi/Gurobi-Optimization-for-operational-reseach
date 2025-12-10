@@ -5,14 +5,9 @@ import re
 from typing import Dict, List, Tuple, Optional
 
 import pandas as pd
-from PySide6.QtWidgets import (
-    QApplication, QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QFileDialog,
-    QTableView, QLabel, QFormLayout, QLineEdit, QSpinBox, QDoubleSpinBox, QMessageBox,
-    QDialog, QDialogButtonBox, QListWidget, QListWidgetItem, QGroupBox, QSizePolicy, QTabWidget,
-    QHeaderView
-)
-from PySide6.QtCore import QAbstractTableModel, Qt
-from PySide6.QtGui import QIcon, QPalette, QColor, QFont
+from qtpy.QtWidgets import *
+from qtpy.QtCore import QAbstractTableModel, Qt
+from qtpy.QtGui import QIcon, QPalette, QColor, QFont
 
 import gurobipy as gp
 from gurobipy import GRB
@@ -661,3 +656,14 @@ def apply_light_palette(app: QApplication):
     app.setStyleSheet("QToolTip { color: #000000; background-color: #ffffe1; border: 1px solid black; }")
 
 
+def main():
+    app = QApplication(sys.argv)
+    app.setFont(QFont('Segoe UI', 11))
+    apply_light_palette(app)
+    app.setWindowIcon(QIcon("icon.png"))
+    win = MainWindow()
+    win.showMaximized()
+    sys.exit(app.exec())
+
+if __name__ == '__main__':
+    main()
