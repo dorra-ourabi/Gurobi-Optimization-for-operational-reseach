@@ -1,0 +1,460 @@
+{
+  "_metadata": {
+    "last_modified": "2025-12-10T08:22:37.691203",
+    "version": "1.0",
+    "default_config": "config\\default_config.json"
+  },
+  "config": {
+    "_metadata": {
+      "last_modified": "2025-12-09T22:35:32.771222",
+      "version": "1.0",
+      "default_config": "config\\default_config.json"
+    },
+    "config": {
+      "_metadata": {
+        "last_modified": "2025-12-09T22:25:35.713672",
+        "version": "1.0",
+        "default_config": "config\\default_config.json"
+      },
+      "config": {
+        "_metadata": {
+          "last_modified": "2025-12-09T22:08:13.141069",
+          "version": "1.0",
+          "default_config": "config\\default_config.json"
+        },
+        "config": {
+          "_metadata": {
+            "last_modified": "2025-12-09T21:47:23.523928",
+            "version": "1.0",
+            "default_config": "config\\default_config.json"
+          },
+          "config": {
+            "_metadata": {
+              "last_modified": "2025-12-09T21:46:58.463146",
+              "version": "1.0",
+              "default_config": "config\\default_config.json"
+            },
+            "config": {
+              "_metadata": {
+                "last_modified": "2025-12-09T21:21:46.392159",
+                "version": "1.0",
+                "default_config": "config\\default_config.json"
+              },
+              "config": {
+                "_metadata": {
+                  "last_modified": "2025-12-09T20:52:19.457884",
+                  "version": "1.0",
+                  "default_config": "config\\default_config.json"
+                },
+                "config": {
+                  "_metadata": {
+                    "last_modified": "2025-12-09T20:11:42.639037",
+                    "version": "1.0",
+                    "default_config": "config\\default_config.json"
+                  },
+                  "config": {
+                    "_metadata": {
+                      "last_modified": "2025-12-09T19:56:52.355075",
+                      "version": "1.0",
+                      "default_config": "config\\default_config.json"
+                    },
+                    "config": {
+                      "_metadata": {
+                        "last_modified": "2025-12-09T19:44:52.483166",
+                        "version": "1.0",
+                        "default_config": "config\\default_config.json"
+                      },
+                      "config": {
+                        "_metadata": {
+                          "last_modified": "2025-12-09T19:30:25.798281",
+                          "version": "1.0",
+                          "default_config": "config\\default_config.json"
+                        },
+                        "config": {
+                          "_metadata": {
+                            "last_modified": "2025-12-09T18:55:02.711093",
+                            "version": "1.0",
+                            "default_config": "config\\default_config.json"
+                          },
+                          "config": {
+                            "_metadata": {
+                              "last_modified": "2025-12-09T14:20:09.510875",
+                              "version": "1.0",
+                              "default_config": "config\\default_config.json"
+                            },
+                            "config": {
+                              "_metadata": {
+                                "last_modified": "2025-12-09T13:33:17.874447",
+                                "version": "1.0",
+                                "default_config": "config\\default_config.json"
+                              },
+                              "config": {
+                                "_metadata": {
+                                  "last_modified": "2025-12-09T13:29:14.255721",
+                                  "version": "1.0",
+                                  "default_config": "config\\default_config.json"
+                                },
+                                "config": {
+                                  "_metadata": {
+                                    "last_modified": "2025-12-09T13:20:17.182751",
+                                    "version": "1.0",
+                                    "default_config": "config\\default_config.json"
+                                  },
+                                  "config": {
+                                    "_metadata": {
+                                      "last_modified": "2025-12-09T12:44:35.346812",
+                                      "version": "1.0",
+                                      "default_config": "config\\default_config.json"
+                                    },
+                                    "config": {
+                                      "_metadata": {
+                                        "last_modified": "2025-12-08T09:48:58.310154",
+                                        "version": "1.0",
+                                        "default_config": "config\\default_config.json"
+                                      },
+                                      "config": {
+                                        "_metadata": {
+                                          "last_modified": "2025-12-08T08:09:49.590548",
+                                          "version": "1.0",
+                                          "default_config": "config\\default_config.json"
+                                        },
+                                        "config": {
+                                          "_metadata": {
+                                            "last_modified": "2025-12-05T18:30:28.464238",
+                                            "version": "1.0",
+                                            "default_config": "config\\default_config.json"
+                                          },
+                                          "config": {
+                                            "_metadata": {
+                                              "last_modified": "2025-12-05T18:27:57.203196",
+                                              "version": "1.0",
+                                              "default_config": "config\\default_config.json"
+                                            },
+                                            "config": {
+                                              "_metadata": {
+                                                "last_modified": "2025-12-05T18:00:53.330297",
+                                                "version": "1.0",
+                                                "default_config": "config\\default_config.json"
+                                              },
+                                              "config": {
+                                                "_metadata": {
+                                                  "last_modified": "2025-12-05T17:51:05.882629",
+                                                  "version": "1.0",
+                                                  "default_config": "config\\default_config.json"
+                                                },
+                                                "config": {
+                                                  "_metadata": {
+                                                    "last_modified": "2025-12-05T17:41:28.220733",
+                                                    "version": "1.0",
+                                                    "default_config": "config\\default_config.json"
+                                                  },
+                                                  "config": {
+                                                    "_metadata": {
+                                                      "last_modified": "2025-12-05T17:18:12.517912",
+                                                      "version": "1.0",
+                                                      "default_config": "config\\default_config.json"
+                                                    },
+                                                    "config": {
+                                                      "_metadata": {
+                                                        "last_modified": "2025-12-05T17:16:13.967630",
+                                                        "version": "1.0",
+                                                        "default_config": "config\\default_config.json"
+                                                      },
+                                                      "config": {
+                                                        "_metadata": {
+                                                          "last_modified": "2025-12-05T17:15:45.642269",
+                                                          "version": "1.0",
+                                                          "default_config": "config\\default_config.json"
+                                                        },
+                                                        "config": {
+                                                          "_metadata": {
+                                                            "last_modified": "2025-12-05T17:15:03.889832",
+                                                            "version": "1.0",
+                                                            "default_config": "config\\default_config.json"
+                                                          },
+                                                          "config": {
+                                                            "_metadata": {
+                                                              "last_modified": "2025-12-05T17:12:31.596484",
+                                                              "version": "1.0",
+                                                              "default_config": "config\\default_config.json"
+                                                            },
+                                                            "config": {
+                                                              "_metadata": {
+                                                                "last_modified": "2025-12-05T17:10:44.258798",
+                                                                "version": "1.0",
+                                                                "default_config": "config\\default_config.json"
+                                                              },
+                                                              "config": {
+                                                                "_metadata": {
+                                                                  "last_modified": "2025-12-05T17:05:30.788097",
+                                                                  "version": "1.0",
+                                                                  "default_config": "config\\default_config.json"
+                                                                },
+                                                                "config": {
+                                                                  "_metadata": {
+                                                                    "last_modified": "2025-12-05T17:02:45.064906",
+                                                                    "version": "1.0",
+                                                                    "default_config": "config\\default_config.json"
+                                                                  },
+                                                                  "config": {
+                                                                    "_metadata": {
+                                                                      "last_modified": "2025-12-05T16:49:39.709769",
+                                                                      "version": "1.0",
+                                                                      "default_config": "config\\default_config.json"
+                                                                    },
+                                                                    "config": {
+                                                                      "_metadata": {
+                                                                        "last_modified": "2025-12-05T16:48:25.919026",
+                                                                        "version": "1.0",
+                                                                        "default_config": "config\\default_config.json"
+                                                                      },
+                                                                      "config": {
+                                                                        "_metadata": {
+                                                                          "last_modified": "2025-12-05T16:19:28.896865",
+                                                                          "version": "1.0",
+                                                                          "default_config": "config\\default_config.json"
+                                                                        },
+                                                                        "config": {
+                                                                          "_metadata": {
+                                                                            "last_modified": "2025-12-05T16:07:06.133955",
+                                                                            "version": "1.0",
+                                                                            "default_config": "config\\default_config.json"
+                                                                          },
+                                                                          "config": {
+                                                                            "_metadata": {
+                                                                              "last_modified": "2025-12-05T15:35:26.072437",
+                                                                              "version": "1.0",
+                                                                              "default_config": "config\\default_config.json"
+                                                                            },
+                                                                            "config": {
+                                                                              "_metadata": {
+                                                                                "last_modified": "2025-12-05T15:21:27.701682",
+                                                                                "version": "1.0",
+                                                                                "default_config": "config\\default_config.json"
+                                                                              },
+                                                                              "config": {
+                                                                                "_metadata": {
+                                                                                  "last_modified": "2025-12-05T15:06:59.512018",
+                                                                                  "version": "1.0",
+                                                                                  "default_config": "config\\default_config.json"
+                                                                                },
+                                                                                "config": {
+                                                                                  "_metadata": {
+                                                                                    "last_modified": "2025-12-05T14:59:17.645334",
+                                                                                    "version": "1.0",
+                                                                                    "default_config": "config\\default_config.json"
+                                                                                  },
+                                                                                  "config": {
+                                                                                    "_metadata": {
+                                                                                      "last_modified": "2025-12-05T14:57:47.216775",
+                                                                                      "version": "1.0",
+                                                                                      "default_config": "config\\default_config.json"
+                                                                                    },
+                                                                                    "config": {
+                                                                                      "_metadata": {
+                                                                                        "last_modified": "2025-12-05T14:56:09.322457",
+                                                                                        "version": "1.0",
+                                                                                        "default_config": "config\\default_config.json"
+                                                                                      },
+                                                                                      "config": {
+                                                                                        "_metadata": {
+                                                                                          "last_modified": "2025-12-05T14:39:39.480078",
+                                                                                          "version": "1.0",
+                                                                                          "default_config": "config\\default_config.json"
+                                                                                        },
+                                                                                        "config": {
+                                                                                          "_metadata": {
+                                                                                            "last_modified": "2025-12-05T14:30:15.443048",
+                                                                                            "version": "1.0",
+                                                                                            "default_config": "config\\default_config.json"
+                                                                                          },
+                                                                                          "config": {
+                                                                                            "_metadata": {
+                                                                                              "last_modified": "2025-12-05T13:47:10.582224",
+                                                                                              "version": "1.0",
+                                                                                              "default_config": "config\\default_config.json"
+                                                                                            },
+                                                                                            "config": {
+                                                                                              "parametres_macroeconomiques": {
+                                                                                                "taux_directeur_bce": 4.0,
+                                                                                                "taux_euribor_3m": 0.0,
+                                                                                                "taux_inflation": 2.8,
+                                                                                                "croissance_economique": 1.2
+                                                                                              },
+                                                                                              "couts_et_risques": {
+                                                                                                "cout_refinancement": 4.3,
+                                                                                                "marge_minimale": 0.8,
+                                                                                                "perte_en_cas_defaut_LGD": 30.0,
+                                                                                                "couts_operationnels": {
+                                                                                                  "immobilier": 1200,
+                                                                                                  "automobile": 400,
+                                                                                                  "personnel": 250
+                                                                                                }
+                                                                                              },
+                                                                                              "contraintes_reglementaires": {
+                                                                                                "ratio_endettement_max": 35.0,
+                                                                                                "score_credit_minimum": 580
+                                                                                              },
+                                                                                              "parametres_marche": {
+                                                                                                "demande_base": 200,
+                                                                                                "marge_competitive_max": 15.0
+                                                                                              },
+                                                                                              "calcul_probabilite_defaut": {
+                                                                                                "poids_score_credit": 4.5,
+                                                                                                "poids_ratio_endettement": 2.5,
+                                                                                                "poids_nombre_prets": 0.4,
+                                                                                                "poids_anciennete_pro": 0.3,
+                                                                                                "facteur_prime_risque": 10.0
+                                                                                              },
+                                                                                              "scenarios_economiques": {
+                                                                                                "scenario_actif": "récession"
+                                                                                              }
+                                                                                            },
+                                                                                            "parametres_macroeconomiques": {
+                                                                                              "taux_directeur_bce": 6.0,
+                                                                                              "taux_euribor_3m": 5.9,
+                                                                                              "taux_inflation": 2.8,
+                                                                                              "croissance_economique": 2.2
+                                                                                            },
+                                                                                            "couts_et_risques": {
+                                                                                              "cout_refinancement": 4.3,
+                                                                                              "marge_minimale": 0.7999999999999998,
+                                                                                              "perte_en_cas_defaut_LGD": 27.0,
+                                                                                              "couts_operationnels": {
+                                                                                                "immobilier": 1200,
+                                                                                                "automobile": 400,
+                                                                                                "personnel": 246
+                                                                                              }
+                                                                                            },
+                                                                                            "contraintes_reglementaires": {
+                                                                                              "ratio_endettement_max": 35.0,
+                                                                                              "score_credit_minimum": 580
+                                                                                            },
+                                                                                            "parametres_marche": {
+                                                                                              "demande_base": 200,
+                                                                                              "marge_competitive_max": 50.0
+                                                                                            },
+                                                                                            "calcul_probabilite_defaut": {
+                                                                                              "poids_score_credit": 4.5,
+                                                                                              "poids_ratio_endettement": 4.0,
+                                                                                              "poids_nombre_prets": 0.4,
+                                                                                              "poids_anciennete_pro": 5.0,
+                                                                                              "facteur_prime_risque": 0.0
+                                                                                            },
+                                                                                            "scenarios_economiques": {
+                                                                                              "scenario_actif": "normal"
+                                                                                            }
+                                                                                          },
+                                                                                          "parametres_macroeconomiques": {
+                                                                                            "taux_directeur_bce": 6.0,
+                                                                                            "taux_euribor_3m": 3.9,
+                                                                                            "taux_inflation": 2.8,
+                                                                                            "croissance_economique": 1.2
+                                                                                          },
+                                                                                          "couts_et_risques": {
+                                                                                            "cout_refinancement": 4.3,
+                                                                                            "marge_minimale": 0.8,
+                                                                                            "perte_en_cas_defaut_LGD": 40.0,
+                                                                                            "couts_operationnels": {
+                                                                                              "immobilier": 1200,
+                                                                                              "automobile": 400,
+                                                                                              "personnel": 250
+                                                                                            }
+                                                                                          },
+                                                                                          "contraintes_reglementaires": {
+                                                                                            "ratio_endettement_max": 35.0,
+                                                                                            "score_credit_minimum": 580
+                                                                                          },
+                                                                                          "parametres_marche": {
+                                                                                            "demande_base": 200,
+                                                                                            "marge_competitive_max": 15.0
+                                                                                          },
+                                                                                          "calcul_probabilite_defaut": {
+                                                                                            "poids_score_credit": 4.5,
+                                                                                            "poids_ratio_endettement": 2.5,
+                                                                                            "poids_nombre_prets": 0.4,
+                                                                                            "poids_anciennete_pro": 0.3,
+                                                                                            "facteur_prime_risque": 0.3
+                                                                                          },
+                                                                                          "scenarios_economiques": {
+                                                                                            "scenario_actif": "normal"
+                                                                                          }
+                                                                                        }
+                                                                                      }
+                                                                                    }
+                                                                                  }
+                                                                                }
+                                                                              }
+                                                                            },
+                                                                            "parametres_macroeconomiques": {
+                                                                              "taux_directeur_bce": 10.0,
+                                                                              "taux_euribor_3m": 3.9,
+                                                                              "taux_inflation": 2.8,
+                                                                              "croissance_economique": 1.2
+                                                                            },
+                                                                            "couts_et_risques": {
+                                                                              "cout_refinancement": 4.3,
+                                                                              "marge_minimale": 0.8,
+                                                                              "perte_en_cas_defaut_LGD": 40.0,
+                                                                              "couts_operationnels": {
+                                                                                "immobilier": 1200,
+                                                                                "automobile": 400,
+                                                                                "personnel": 250
+                                                                              }
+                                                                            },
+                                                                            "contraintes_reglementaires": {
+                                                                              "ratio_endettement_max": 21.0,
+                                                                              "score_credit_minimum": 520
+                                                                            },
+                                                                            "parametres_marche": {
+                                                                              "demande_base": 200,
+                                                                              "marge_competitive_max": 15.0
+                                                                            },
+                                                                            "calcul_probabilite_defaut": {
+                                                                              "poids_score_credit": 4.5,
+                                                                              "poids_ratio_endettement": 2.5,
+                                                                              "poids_nombre_prets": 0.4,
+                                                                              "poids_anciennete_pro": 0.3,
+                                                                              "facteur_prime_risque": 2.3
+                                                                            },
+                                                                            "scenarios_economiques": {
+                                                                              "scenario_actif": "normal"
+                                                                            }
+                                                                          }
+                                                                        }
+                                                                      }
+                                                                    }
+                                                                  }
+                                                                }
+                                                              }
+                                                            }
+                                                          }
+                                                        }
+                                                      }
+                                                    }
+                                                  }
+                                                }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

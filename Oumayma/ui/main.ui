@@ -1,0 +1,444 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1400</width>
+    <height>900</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>🏦 Système de Tarification Optimale - Recherche Opérationnelle</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <widget class="QLabel" name="headerLabel">
+      <property name="font">
+       <font>
+        <pointsize>20</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QLabel {
+    background-color: #1976D2;
+    color: white;
+    padding: 15px;
+    border-radius: 5px;
+}</string>
+      </property>
+      <property name="text">
+       <string>🏦 SYSTÈME DE TARIFICATION OPTIMALE DES PRÊTS</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QTabWidget" name="tabWidget">
+      <property name="currentIndex">
+       <number>1</number>
+      </property>
+      <widget class="QWidget" name="configTab">
+       <attribute name="title">
+        <string>⚙️ Configuration</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_2">
+        <item>
+         <widget class="QLabel" name="configTitle">
+          <property name="font">
+           <font>
+            <pointsize>16</pointsize>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="text">
+           <string>⚙️ CONFIGURATION DES PARAMÈTRES GLOBAUX</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QScrollArea" name="scrollArea">
+          <property name="widgetResizable">
+           <bool>true</bool>
+          </property>
+          <widget class="QWidget" name="scrollAreaWidgetContents">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>0</y>
+             <width>1350</width>
+             <height>700</height>
+            </rect>
+           </property>
+           <!-- Contenu dynamique créé par le code Python -->
+          </widget>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="clientTab">
+       <attribute name="title">
+        <string>👤 Nouveau Client</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_3">
+        <item>
+         <widget class="QLabel" name="clientTitle">
+          <property name="font">
+           <font>
+            <pointsize>16</pointsize>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="text">
+           <string>👤 NOUVEAU DOSSIER CLIENT</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QSplitter" name="splitter">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <!-- Partie gauche : Formulaire -->
+          <widget class="QWidget" name="formContainer">
+           <layout class="QVBoxLayout" name="formLayout">
+            <item>
+             <widget class="QGroupBox" name="clientGroupBox">
+              <property name="title">
+               <string>👨 Informations Client</string>
+              </property>
+              <layout class="QFormLayout" name="clientFormLayout">
+               <item row="0" column="0">
+                <widget class="QLabel" name="scoreCreditLabel">
+                 <property name="text">
+                  <string>Score de crédit (S_credit):</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="1">
+                <widget class="QSpinBox" name="scoreCreditSpinBox">
+                 <property name="minimum">
+                  <number>300</number>
+                 </property>
+                 <property name="maximum">
+                  <number>850</number>
+                 </property>
+                 <property name="value">
+                  <number>720</number>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="0">
+                <widget class="QLabel" name="revenuLabel">
+                 <property name="text">
+                  <string>Revenu mensuel (R_mensuel):</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="1">
+                <widget class="QSpinBox" name="revenuSpinBox">
+                 <property name="maximum">
+                  <number>50000</number>
+                 </property>
+                 <property name="suffix">
+                  <string> €</string>
+                 </property>
+                 <property name="value">
+                  <number>3500</number>
+                 </property>
+                </widget>
+               </item>
+               <!-- Ajoutez tous les autres champs client ici -->
+              </layout>
+             </widget>
+            </item>
+            <item>
+             <widget class="QGroupBox" name="pretGroupBox">
+              <property name="title">
+               <string>🏦 Demande de Prêt</string>
+              </property>
+              <layout class="QFormLayout" name="pretFormLayout">
+               <item row="0" column="0">
+                <widget class="QLabel" name="typePretLabel">
+                 <property name="text">
+                  <string>Type de prêt:</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="1">
+                <widget class="QComboBox" name="typePretComboBox">
+                 <item>
+                  <property name="text">
+                   <string>immobilier</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>automobile</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>personnel</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>professionnel</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>etudiant</string>
+                  </property>
+                 </item>
+                </widget>
+               </item>
+               <!-- Ajoutez tous les autres champs prêt ici -->
+              </layout>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="analyserButton">
+              <property name="font">
+               <font>
+                <pointsize>14</pointsize>
+                <weight>75</weight>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">QPushButton {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+}
+QPushButton:hover {
+    background-color: #45a049;
+}</string>
+              </property>
+              <property name="text">
+               <string>🔍 ANALYSER ET OPTIMISER</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QProgressBar" name="progressBar">
+              <property name="visible">
+               <bool>false</bool>
+              </property>
+              <property name="value">
+               <number>0</number>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+          <!-- Partie droite : Résultats -->
+          <widget class="QTextEdit" name="resultsTextEdit">
+           <property name="readOnly">
+            <bool>true</bool>
+           </property>
+           <property name="placeholderText">
+            <string>Les résultats s'afficheront ici...</string>
+           </property>
+          </widget>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="analyseTab">
+       <attribute name="title">
+        <string>📊 Analyse de Sensibilité</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_4">
+        <item>
+         <widget class="QLabel" name="analyseTitle">
+          <property name="font">
+           <font>
+            <pointsize>16</pointsize>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="text">
+           <string>📊 ANALYSE DE SENSIBILITÉ</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <!-- Contenu à ajouter -->
+       </layout>
+      </widget>
+      <widget class="QWidget" name="portefeuilleTab">
+       <attribute name="title">
+        <string>📁 Portefeuille</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_5">
+        <item>
+         <widget class="QLabel" name="portefeuilleTitle">
+          <property name="font">
+           <font>
+            <pointsize>16</pointsize>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="text">
+           <string>📁 PORTEFEUILLE DE PRÊTS</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QTableWidget" name="portefeuilleTable">
+          <property name="columnCount">
+           <number>8</number>
+          </property>
+          <column>
+           <property name="text">
+            <string>N°</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Type</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Montant (€)</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Durée (ans)</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Taux (%)</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Mensualité (€)</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Profit (€)</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Statut</string>
+           </property>
+          </column>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1400</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuFichier">
+    <property name="title">
+     <string>Fichier</string>
+    </property>
+    <addaction name="actionNouveau"/>
+    <addaction name="actionOuvrir"/>
+    <addaction name="actionSauvegarder"/>
+    <addaction name="separator"/>
+    <addaction name="actionQuitter"/>
+   </widget>
+   <widget class="QMenu" name="menuAide">
+    <property name="title">
+     <string>Aide</string>
+    </property>
+    <addaction name="actionDocumentation"/>
+    <addaction name="actionAPropos"/>
+   </widget>
+   <addaction name="menuFichier"/>
+   <addaction name="menuAide"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionNouveau">
+   <property name="text">
+    <string>Nouveau</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+N</string>
+   </property>
+  </action>
+  <action name="actionOuvrir">
+   <property name="text">
+    <string>Ouvrir...</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
+   </property>
+  </action>
+  <action name="actionSauvegarder">
+   <property name="text">
+    <string>Sauvegarder</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
+   </property>
+  </action>
+  <action name="actionQuitter">
+   <property name="text">
+    <string>Quitter</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Q</string>
+   </property>
+  </action>
+  <action name="actionDocumentation">
+   <property name="text">
+    <string>Documentation</string>
+   </property>
+   <property name="shortcut">
+    <string>F1</string>
+   </property>
+  </action>
+  <action name="actionAPropos">
+   <property name="text">
+    <string>À propos</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

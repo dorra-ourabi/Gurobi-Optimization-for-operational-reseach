@@ -1,0 +1,781 @@
+{
+  "metadata": {
+    "version": "2.0",
+    "date_creation": "2024-12-03",
+    "description": "Dictionnaire complet de toutes les variables du modèle de tarification optimale",
+    "total_variables": 87
+  },
+
+  "categories": [
+    "parametres_macroeconomiques",
+    "couts_et_risques",
+    "contraintes_reglementaires",
+    "parametres_marche",
+    "caracteristiques_client",
+    "calcul_probabilite_defaut",
+    "scenarios_economiques",
+    "capital_et_portefeuille",
+    "parametres_avances"
+  ],
+
+  "variables": {
+    
+    "tau_BCE": {
+      "nom_complet": "Taux directeur de la Banque Centrale Européenne",
+      "symbole": "τ_BCE",
+      "categorie": "parametres_macroeconomiques",
+      "type": "taux_percentage",
+      "unite": "%",
+      "valeur_defaut": 2.5,
+      "plage_min": 0.0,
+      "plage_max": 10.0,
+      "description": "Taux d'intérêt principal de la politique monétaire européenne. C'est le taux auquel les banques commerciales peuvent emprunter auprès de la BCE.",
+      "comment_determiner": "Consultation du site officiel de la BCE (www.ecb.europa.eu). Les décisions sont prises lors des réunions du Conseil des gouverneurs.",
+      "impact": "Détermine le coût de base du refinancement pour toutes les banques. Une variation de 0.25% peut impacter significativement la rentabilité des prêts.",
+      "formule_liee": "c_ref = τ_BCE + spread_bancaire",
+      "exemple_calcul": "Si τ_BCE = 2.5% et spread = 0.2% → c_ref = 2.7%",
+      "recommandations": [
+        "Vérifier avant chaque décision importante de tarification",
+        "Suivre les calendriers des réunions de la BCE",
+        "Considérer les prévisions des analystes économiques",
+        "Ajuster trimestriellement minimum"
+      ],
+      "mots_cles": ["taux directeur", "BCE", "politique monétaire", "refinancement"]
+    },
+
+    "tau_IB": {
+      "nom_complet": "Taux interbancaire (EURIBOR)",
+      "symbole": "τ_IB",
+      "categorie": "parametres_macroeconomiques",
+      "type": "taux_percentage",
+      "unite": "%",
+      "valeur_defaut": 2.8,
+      "plage_min": -0.5,
+      "plage_max": 10.0,
+      "description": "Taux auquel les banques européennes se prêtent des fonds entre elles. Référence pour de nombreux prêts variables.",
+      "comment_determiner": "Publication quotidienne sur le site EURIBOR-rates.eu. Différentes échéances : 1 mois, 3 mois, 6 mois, 12 mois.",
+      "impact": "Utilisé comme référence pour les prêts à taux variable. Influence les attentes de marché sur les taux futurs.",
+      "formule_liee": "Taux_variable = τ_IB + marge_fixe",
+      "exemple_calcul": "τ_IB 3 mois = 2.8%, marge = 1.5% → Taux initial = 4.3%",
+      "recommandations": [
+        "Utiliser l'EURIBOR 3 mois pour les prêts à court terme",
+        "Considérer l'EURIBOR 12 mois pour les prêts à moyen terme",
+        "Surveiller les spreads entre différentes échéances"
+      ],
+      "mots_cles": ["EURIBOR", "taux interbancaire", "marché monétaire"]
+    },
+
+    "pi": {
+      "nom_complet": "Taux d'inflation",
+      "symbole": "π",
+      "categorie": "parametres_macroeconomiques",
+      "type": "taux_percentage",
+      "unite": "%",
+      "valeur_defaut": 3.2,
+      "plage_min": -2.0,
+      "plage_max": 15.0,
+      "description": "Augmentation générale et durable du niveau des prix des biens et services dans une économie sur une période donnée.",
+      "comment_determiner": "Données publiées par l'INSEE (France) ou Eurostat (UE). IPC harmonisé pour comparaisons européennes.",
+      "impact": "Réduit la valeur réelle des intérêts perçus. Nécessite des taux nominaux plus élevés pour maintenir les marges réelles.",
+      "formule_liee": "Taux_réel = Taux_nominal - π",
+      "exemple_calcul": "Taux nominal = 5%, inflation = 3% → Taux réel = 2%",
+      "recommandations": [
+        "Utiliser l'inflation sous-jacente (hors énergie et alimentation) pour les décisions à moyen terme",
+        "Ajuster mensuellement les paramètres",
+        "Considérer les prévisions d'inflation à 12 mois"
+      ],
+      "mots_cles": ["inflation", "taux réel", "pouvoir d'achat", "IPC"]
+    },
+
+    "g_eco": {
+      "nom_complet": "Taux de croissance économique",
+      "symbole": "g",
+      "categorie": "parametres_macroeconomiques",
+      "type": "taux_percentage",
+      "unite": "%",
+      "valeur_defaut": 1.5,
+      "plage_min": -10.0,
+      "plage_max": 10.0,
+      "description": "Taux de variation du Produit Intérieur Brut (PIB). Mesure la santé économique générale.",
+      "comment_determiner": "Données trimestrielles de l'INSEE, Eurostat, ou FMI. Croissance en volume (déflatée).",
+      "impact": "Croissance forte → meilleure solvabilité des clients → risque réduit. Croissance faible → risque accru.",
+      "formule_liee": "Demande_ajustée = D_0 × (1 + α × g)",
+      "exemple_calcul": "Croissance = 2% → augmentation de la demande de crédit d'environ 1.5%",
+      "recommandations": [
+        "Suivre les prévisions de croissance du FMI et de la Commission Européenne",
+        "Ajuster les politiques de crédit selon le cycle économique",
+        "Considérer les différences sectorielles"
+      ],
+      "mots_cles": ["croissance", "PIB", "économie", "conjoncture"]
+    },
+
+    "c_ref": {
+      "nom_complet": "Coût de refinancement de la banque",
+      "symbole": "c_ref",
+      "categorie": "couts_et_risques",
+      "type": "taux_percentage",
+      "unite": "%",
+      "valeur_defaut": 2.7,
+      "plage_min": 0.1,
+      "plage_max": 8.0,
+      "description": "Coût moyen pour la banque de se procurer les fonds nécessaires à ses activités de prêt. Inclut les dépôts clients, le marché interbancaire et le refinancement BCE.",
+      "comment_determiner": "c_ref = τ_BCE + spread_bancaire. Le spread dépend de la notation de la banque et des conditions de marché.",
+      "impact": "Taux plancher absolu. Tout prêt à taux inférieur à c_ref génère une perte certaine. Détermine la compétitivité.",
+      "formule_liee": "r_min ≥ c_ref + m_min + prime_risque",
+      "exemple_calcul": "τ_BCE = 2.5%, spread = 0.2% → c_ref = 2.7%",
+      "recommandations": [
+        "Calculer quotidiennement le coût moyen pondéré des ressources",
+        "Ajuster le spread selon la notation de la banque",
+        "Considérer le coût des dépôts clients",
+        "Maintenir une marge de sécurité de +0.1% minimum"
+      ],
+      "mots_cles": ["coût des fonds", "refinancement", "taux plancher", "spread"]
+    },
+
+    "m_min": {
+      "nom_complet": "Marge minimale exigée",
+      "symbole": "m_min",
+      "categorie": "couts_et_risques",
+      "type": "taux_percentage",
+      "unite": "%",
+      "valeur_defaut": 0.5,
+      "plage_min": 0.0,
+      "plage_max": 3.0,
+      "description": "Marge de profit minimum que la banque exige sur ses opérations de prêt, après couverture de tous les coûts et risques.",
+      "comment_determiner": "Défini par la politique commerciale et les objectifs de rentabilité. Doit couvrir les coûts fixes et le rendement exigé par les actionnaires.",
+      "impact": "Détermine la rentabilité minimale acceptable. Une marge trop basse peut menacer la pérennité de la banque.",
+      "formule_liee": "r_min = c_ref + m_min + prime_risque",
+      "exemple_calcul": "c_ref = 2.7%, m_min = 0.5% → taux minimum sans risque = 3.2%",
+      "recommandations": [
+        "Définir selon les objectifs de ROE (Return on Equity)",
+        "Différencier par type de prêt (immobilier vs consommation)",
+        "Ajuster selon la concurrence et la stratégie commerciale",
+        "Revoir annuellement"
+      ],
+      "mots_cles": ["marge", "profit", "rentabilité", "ROE"]
+    },
+
+    "LGD": {
+      "nom_complet": "Loss Given Default - Perte en cas de défaut",
+      "symbole": "LGD",
+      "categorie": "couts_et_risques",
+      "type": "pourcentage",
+      "unite": "%",
+      "valeur_defaut": 45.0,
+      "plage_min": 20.0,
+      "plage_max": 80.0,
+      "description": "Pourcentage du montant exposé qui sera effectivement perdu si le client fait défaut, après recouvrement et vente des garanties.",
+      "comment_determiner": "Basé sur l'historique de recouvrement de la banque, le type de garantie, la procédure judiciaire. Diffère selon les produits.",
+      "impact": "Influence directement les provisions pour risque et la rentabilité attendue. LGD élevé nécessite des taux plus élevés.",
+      "formule_liee": "Perte_attendue = PD × LGD × EAD",
+      "exemple_calcul": "Prêt 100 000€, PD=2%, LGD=45% → Perte attendue = 900€",
+      "recommandations": [
+        "Immobilier avec hypothèque: 30-40%",
+        "Crédit auto avec gage: 40-50%",
+        "Crédit personnel sans garantie: 50-60%",
+        "Réviser annuellement avec les données de recouvrement"
+      ],
+      "mots_cles": ["perte", "défaut", "recouvrement", "garanties"]
+    },
+
+    "c_op_immo": {
+      "nom_complet": "Coût opérationnel - Prêt immobilier",
+      "symbole": "c_op^immo",
+      "categorie": "couts_et_risques",
+      "type": "montant",
+      "unite": "€",
+      "valeur_defaut": 1500,
+      "plage_min": 500,
+      "plage_max": 5000,
+      "description": "Coût moyen de traitement d'un dossier de prêt immobilier. Inclut l'analyse, l'instruction, les frais juridiques, l'évaluation du bien.",
+      "comment_determiner": "Calcul des coûts réels par département + marge pour frais généraux. Doit être réparti sur la durée du prêt.",
+      "impact": "Coût fixe qui réduit la rentabilité, surtout sur les petits montants. Nécessite une marge suffisante.",
+      "formule_liee": "Profit = Revenus - c_ref - c_op - Pertes_attendues",
+      "exemple_calcul": "Dossier 1500€ sur prêt 200 000€ sur 20 ans → coût annualisé = 75€/an",
+      "recommandations": [
+        "Calculer précisément les coûts par type de dossier",
+        "Négocier avec les notaires et experts",
+        "Automatiser les processus pour réduire les coûts",
+        "Revoir trimestriellement"
+      ],
+      "mots_cles": ["coût dossier", "frais", "immobilier", "opérationnel"]
+    },
+
+    "c_op_auto": {
+      "nom_complet": "Coût opérationnel - Prêt automobile",
+      "symbole": "c_op^auto",
+      "categorie": "couts_et_risques",
+      "type": "montant",
+      "unite": "€",
+      "valeur_defaut": 500,
+      "plage_min": 200,
+      "plage_max": 2000,
+      "description": "Coût moyen de traitement d'un dossier de crédit automobile. Inclut l'analyse de crédit, l'inscription au fichier, le suivi administratif.",
+      "comment_determiner": "Analyse des coûts du service crédit auto. Plus faible qu'immobilier car moins de complexité juridique.",
+      "impact": "Impact significatif sur la rentabilité des petits prêts. Nécessite un volume suffisant.",
+      "formule_liee": "Profit_auto = (V × r × k) - (V × c_ref × k) - c_op_auto - Pertes",
+      "exemple_calcul": "Prêt 20 000€ sur 5 ans, c_op=500€ → impact taux = +0.5%",
+      "recommandations": [
+        "Standardiser les processus pour réduire les coûts",
+        "Négocier des tarifs avec les assureurs partenaires",
+        "Digitaliser le processus de demande"
+      ],
+      "mots_cles": ["auto", "véhicule", "coût dossier", "crédit consommation"]
+    },
+
+    "c_op_perso": {
+      "nom_complet": "Coût opérationnel - Crédit personnel",
+      "symbole": "c_op^perso",
+      "categorie": "couts_et_risques",
+      "type": "montant",
+      "unite": "€",
+      "valeur_defaut": 300,
+      "plage_min": 100,
+      "plage_max": 1000,
+      "description": "Coût de traitement d'un crédit à la consommation. Processus simplifié, souvent automatisé.",
+      "comment_determiner": "Coûts de scoring automatique + frais administratifs. Doit permettre la rentabilité même sur petits montants.",
+      "impact": "Coût faible mais critique pour les micro-crédits. Détermine le montant minimum rentable.",
+      "formule_liee": "Montant_minimum = c_op_perso / (marge × durée)",
+      "exemple_calcul": "c_op=300€, marge=2%, durée=3 ans → montant minimum ≈ 5000€",
+      "recommandations": [
+        "Automatiser au maximum le processus",
+        "Utiliser le scoring automatique",
+        "Regrouper les petites demandes"
+      ],
+      "mots_cles": ["personnel", "consommation", "coût fixe", "automatisation"]
+    },
+
+    "r_usure_immo": {
+      "nom_complet": "Taux d'usure - Prêts immobiliers",
+      "symbole": "r_usure^immo",
+      "categorie": "contraintes_reglementaires",
+      "type": "taux_percentage",
+      "unite": "%",
+      "valeur_defaut": 4.86,
+      "plage_min": 2.0,
+      "plage_max": 10.0,
+      "description": "Taux d'intérêt maximum légal autorisé pour les prêts immobiliers, défini trimestriellement par la Banque de France.",
+      "comment_determiner": "Publication trimestrielle sur le site de la Banque de France. Différent selon la durée : ≤20 ans et >20 ans.",
+      "impact": "Contrainte absolue : tout taux supérieur est illégal et sanctionné pénalement. Détermine le plafond de tarification.",
+      "formule_liee": "r ≤ r_usure^immo (contrainte stricte)",
+      "exemple_calcul": "T4 2024 : prêt ≤20 ans = 4.86%, prêt >20 ans = 4.55%",
+      "recommandations": [
+        "Vérifier chaque trimestre sur bdf.fr",
+        "Mettre à jour immédiatement les systèmes",
+        "Garder une marge de sécurité de -0.3%",
+        "Former les commerciaux sur cette contrainte"
+      ],
+      "mots_cles": ["usure", "taux maximum", "réglementation", "Banque de France"]
+    },
+
+    "r_usure_auto": {
+      "nom_complet": "Taux d'usure - Crédits automobiles",
+      "symbole": "r_usure^auto",
+      "categorie": "contraintes_reglementaires",
+      "type": "taux_percentage",
+      "unite": "%",
+      "valeur_defaut": 6.39,
+      "plage_min": 3.0,
+      "plage_max": 12.0,
+      "description": "Taux maximum légal pour les crédits destinés à l'achat de véhicules. Inclut les voitures neuves et d'occasion.",
+      "comment_determiner": "Publication trimestrielle Banque de France. Prend en compte les taux moyens pratiqués augmentés d'un tiers.",
+      "impact": "Limite supérieure pour tous les crédits auto. S'applique au TAEG (taux annuel effectif global).",
+      "formule_liee": "TAEG_auto ≤ r_usure^auto",
+      "exemple_calcul": "T4 2024 : crédit auto = 6.39% TAEG maximum",
+      "recommandations": [
+        "Inclure tous les frais dans le calcul du TAEG",
+        "Vérifier la catégorie exacte du crédit",
+        "Consulter les fiches pratiques de l'ACPR"
+      ],
+      "mots_cles": ["auto", "véhicule", "TAEG", "usure"]
+    },
+
+    "r_usure_perso": {
+      "nom_complet": "Taux d'usure - Crédits à la consommation",
+      "symbole": "r_usure^perso",
+      "categorie": "contraintes_reglementaires",
+      "type": "taux_percentage",
+      "unite": "%",
+      "valeur_defaut": 8.47,
+      "plage_min": 4.0,
+      "plage_max": 15.0,
+      "description": "Taux maximum légal pour les crédits personnels et à la consommation. Le plus élevé des trois catégories principales.",
+      "comment_determiner": "Publication trimestrielle BdF. Calculé sur la base des taux moyens du trimestre précédent.",
+      "impact": "Protège les consommateurs contre les abus. S'applique à tous les crédits < 75 000€ hors immobilier.",
+      "formule_liee": "r_personnel ≤ r_usure^perso",
+      "exemple_calcul": "T4 2024 : crédit personnel = 8.47% TAEG maximum",
+      "recommandations": [
+        "Attention aux crédits renouvelables (taux souvent proches du max)",
+        "Bien calculer le TAEG incluant assurances facultatives",
+        "Former les clients sur le coût total du crédit"
+      ],
+      "mots_cles": ["personnel", "consommation", "TAEG", "protection client"]
+    },
+
+    "R_max": {
+      "nom_complet": "Ratio d'endettement maximum",
+      "symbole": "R_max",
+      "categorie": "contraintes_reglementaires",
+      "type": "pourcentage",
+      "unite": "%",
+      "valeur_defaut": 33.0,
+      "plage_min": 20.0,
+      "plage_max": 45.0,
+      "description": "Pourcentage maximum du revenu net que peut consacrer un ménage au remboursement de ses crédits (hors crédit immobilier pour la résidence principale).",
+      "comment_determiner": "Réglementation du Haut Conseil de Stabilité Financière (HCSF). Peut être plus strict en politique interne.",
+      "impact": "Contrainte d'éligibilité fondamentale. Protège contre le surendettement mais limite l'accès au crédit.",
+      "formule_liee": "∑Mensualités ≤ R_max × Revenu_mensuel_net",
+      "exemple_calcul": "Revenu 3000€, R_max=33% → capacité de remboursement = 990€/mois",
+      "recommandations": [
+        "France : 33% réglementaire (35% avec dérogation)",
+        "Certains pays : 40-45%",
+        "Politique interne possiblement plus stricte (30%)",
+        "Adapter selon la stabilité des revenus"
+      ],
+      "mots_cles": ["endettement", "ratio", "capacité", "surendettement"]
+    },
+
+    "S_min": {
+      "nom_complet": "Score de crédit minimum",
+      "symbole": "S_min",
+      "categorie": "contraintes_reglementaires",
+      "type": "score",
+      "unite": "points",
+      "valeur_defaut": 600,
+      "plage_min": 300,
+      "plage_max": 850,
+      "description": "Score minimum requis pour être éligible à un prêt. Basé sur l'historique de crédit, les incidents de paiement, l'endettement existant.",
+      "comment_determiner": "Défini par la politique de risque de la banque. Peut varier selon le type de prêt et le montant.",
+      "impact": "Filtre d'entrée pour éliminer les profils trop risqués. Affecte le taux de refus et le risque moyen du portefeuille.",
+      "formule_liee": "Si S_credit < S_min → Refus automatique",
+      "exemple_calcul": "Score client = 580, S_min = 600 → dossier refusé",
+      "recommandations": [
+        "Immobilier : 620-650 minimum",
+        "Auto : 580-620",
+        "Personnel : 550-580",
+        "Ajuster selon le cycle économique"
+      ],
+      "mots_cles": ["score", "crédit", "éligibilité", "scoring"]
+    },
+
+    "D_0": {
+      "nom_complet": "Demande de base (potentiel marché)",
+      "symbole": "D₀",
+      "categorie": "parametres_marche",
+      "type": "nombre_clients",
+      "unite": "clients",
+      "valeur_defaut": 100,
+      "plage_min": 10,
+      "plage_max": 10000,
+      "description": "Nombre de clients potentiels qui accepteraient le prêt si la banque proposait exactement le taux moyen du marché.",
+      "comment_determiner": "Études de marché, historique des ventes, part de marché cible, capacité de traitement.",
+      "impact": "Détermine le volume maximal potentiel. Base pour calculer l'effet de l'élasticité-prix.",
+      "formule_liee": "D(r) = D₀ × [1 + ε × (r̄ - r)]",
+      "exemple_calcul": "D₀ = 100, ε = -150, r = 5%, r̄ = 5.2% → D = 70 clients",
+      "recommandations": [
+        "Segmenter par produit et région",
+        "Actualiser avec les données de concurrence",
+        "Considérer la saisonnalité",
+        "Ajuster selon les campagnes marketing"
+      ],
+      "mots_cles": ["demande", "marché", "potentiel", "volume"]
+    },
+
+    "r_bar_immo": {
+      "nom_complet": "Taux concurrent moyen - Immobilier",
+      "symbole": "r̄_immo",
+      "categorie": "parametres_marche",
+      "type": "taux_percentage",
+      "unite": "%",
+      "valeur_defaut": 3.8,
+      "plage_min": 1.0,
+      "plage_max": 8.0,
+      "description": "Taux moyen pratiqué par les principaux concurrents sur le marché des prêts immobiliers. Référence pour la compétitivité.",
+      "comment_determiner": "Benchmarking sur les comparateurs en ligne (Meilleurtaux, LeLynx), sites des banques concurrentes.",
+      "impact": "Référence pour les clients. Déterminant majeur de la compétitivité et de la part de marché.",
+      "formule_liee": "r ≤ r̄ × (1 + α)  (contrainte compétitivité)",
+      "exemple_calcul": "r̄_immo = 3.8%, α = 10% → taux maximum compétitif = 4.18%",
+      "recommandations": [
+        "Surveiller quotidiennement les comparateurs",
+        "Analyser les offres promotionnelles",
+        "Segmenter par durée (10, 15, 20, 25 ans)",
+        "Considérer les différences régionales"
+      ],
+      "mots_cles": ["concurrent", "benchmark", "immobilier", "compétitivité"]
+    },
+
+    "r_bar_auto": {
+      "nom_complet": "Taux concurrent moyen - Automobile",
+      "symbole": "r̄_auto",
+      "categorie": "parametres_marche",
+      "type": "taux_percentage",
+      "unite": "%",
+      "valeur_defaut": 5.2,
+      "plage_min": 2.0,
+      "plage_max": 10.0,
+      "description": "Taux moyen du marché pour les crédits automobiles. Très concurrentiel, avec de nombreuses offres promotionnelles.",
+      "comment_determiner": "Suivi des concessions, constructeurs, banques spécialisées. Différencier neuf/occasion.",
+      "impact": "Marché très sensible aux prix. Petit écart de taux → grande différence de volume.",
+      "formule_liee": "Écart_compétitif = (r - r̄_auto) / r̄_auto",
+      "exemple_calcul": "r̄_auto = 5.2%, notre taux = 5.5% → écart = +5.8%",
+      "recommandations": [
+        "Surveiller les offres 0% des constructeurs",
+        "Segmenter par type de véhicule",
+        "Considérer les packages assurance+crédit",
+        "Réagir rapidement aux changements"
+      ],
+      "mots_cles": ["auto", "concurrent", "promotion", "taux zéro"]
+    },
+
+    "epsilon_immo": {
+      "nom_complet": "Élasticité-prix de la demande - Immobilier",
+      "symbole": "ε_immo",
+      "categorie": "parametres_marche",
+      "type": "coefficient",
+      "unite": "sans unité",
+      "valeur_defaut": -200,
+      "plage_min": -300,
+      "plage_max": -50,
+      "description": "Mesure la sensibilité de la demande de prêts immobiliers aux variations de taux. Indique combien de clients sont perdus/gagnés pour 1% d'écart de taux.",
+      "comment_determiner": "Analyse historique des ventes vs taux, études de marché, benchmarking sectoriel.",
+      "impact": "Détermine l'arbitrage volume/marge. Élasticité forte → petits écarts de taux ont gros impact volume.",
+      "formule_liee": "ΔClients = ε × Δtaux × D₀",
+      "exemple_calcul": "ε = -200, D₀=100, Δtaux = +0.5% → perte de 100 clients",
+      "recommandations": [
+        "Immobilier : -180 à -250 (très élastique)",
+        "Segment premium : moins élastique",
+        "Primo-accédants : plus élastique",
+        "Actualiser avec données récentes"
+      ],
+      "mots_cles": ["élasticité", "sensibilité", "demande", "volume"]
+    },
+
+    "epsilon_auto": {
+      "nom_complet": "Élasticité-prix de la demande - Automobile",
+      "symbole": "ε_auto",
+      "categorie": "parametres_marche",
+      "type": "coefficient",
+      "unite": "sans unité",
+      "valeur_defaut": -150,
+      "plage_min": -250,
+      "plage_max": -80,
+      "description": "Sensibilité de la demande de crédits auto aux variations de taux. Marché très concurrentiel et transparent.",
+      "comment_determiner": "Données des comparateurs en ligne, historique des ventes des concessions.",
+      "impact": "Détermine la stratégie prix/volume. Clients très sensibles aux différences de taux.",
+      "formule_liee": "D(r) = D₀ × [1 + ε_auto × (r̄_auto - r)]",
+      "exemple_calcul": "D₀=100, ε=-150, taux -0.2% vs marché → gain 30 clients",
+      "recommandations": [
+        "Crédit auto : -120 à -180",
+        "Occasion : moins élastique",
+        "Luxury : -80 à -120",
+        "Surveiller les promotions saisonnières"
+      ],
+      "mots_cles": ["auto", "élasticité", "concurrence", "transparence"]
+    },
+
+    "S_credit": {
+      "nom_complet": "Score de crédit client",
+      "symbole": "S_credit",
+      "categorie": "caracteristiques_client",
+      "type": "score",
+      "unite": "points",
+      "valeur_defaut": null,
+      "plage_min": 300,
+      "plage_max": 850,
+      "description": "Note attribuée à un client évaluant sa capacité et sa volonté de rembourser ses dettes. Basé sur l'historique de crédit.",
+      "comment_determiner": "Calculé par les bureaux de crédit (Experian, Equifax, TransUnion) ou scoring interne.",
+      "impact": "Principal déterminant du risque crédit. Influence directement la PD et le taux proposé.",
+      "formule_liee": "PD = f(S_credit, autres facteurs)",
+      "exemple_calcul": "Score 720 → risque modéré, Score 820 → risque faible",
+      "recommandations": [
+        "<500 : risque très élevé (refus)",
+        "500-600 : risque élevé (taux élevé)",
+        "600-720 : risque modéré",
+        "720-850 : risque faible (taux préférentiel)"
+      ],
+      "mots_cles": ["scoring", "crédit", "risque", "bureau de crédit"]
+    },
+
+    "R_mensuel": {
+      "nom_complet": "Revenu mensuel net",
+      "symbole": "R",
+      "categorie": "caracteristiques_client",
+      "type": "montant",
+      "unite": "€",
+      "valeur_defaut": null,
+      "plage_min": 0,
+      "plage_max": 50000,
+      "description": "Revenu net disponible du client après impôts et charges sociales. Base pour calculer la capacité de remboursement.",
+      "comment_determiner": "Fiches de paie, avis d'imposition, déclarations de revenus. Vérification obligatoire.",
+      "impact": "Détermine directement la capacité d'emprunt et le montant maximum du prêt.",
+      "formule_liee": "Mensualité_max = R_max × R - Charges_existantes",
+      "exemple_calcul": "R=3000€, R_max=33% → capacité 990€/mois",
+      "recommandations": [
+        "Vérifier la stabilité (CDI vs CDD)",
+        "Considérer les revenus complémentaires",
+        "Prendre la moyenne sur 3 ans pour indépendants",
+        "Ajuster selon les charges fixes"
+      ],
+      "mots_cles": ["revenu", "salaire", "capacité", "remboursement"]
+    },
+
+    "D_R": {
+      "nom_complet": "Ratio dette/revenu",
+      "symbole": "D/R",
+      "categorie": "caracteristiques_client",
+      "type": "pourcentage",
+      "unite": "%",
+      "valeur_defaut": null,
+      "plage_min": 0.0,
+      "plage_max": 100.0,
+      "description": "Pourcentage du revenu consacré au remboursement des dettes existantes. Mesure du surendettement potentiel.",
+      "comment_determiner": "D/R = ∑Mensualités_existantes / Revenu_mensuel",
+      "impact": "Critère d'éligibilité majeur. Ratio élevé → risque de défaut accru → refus ou taux élevé.",
+      "formule_liee": "Si D/R ≥ R_max → refus",
+      "exemple_calcul": "Revenu 3000€, charges 800€ → D/R = 26.7%",
+      "recommandations": [
+        "<20% : excellente situation",
+        "20-30% : situation normale",
+        "30-33% : limite réglementaire",
+        ">33% : surendettement → refus"
+      ],
+      "mots_cles": ["endettement", "ratio", "charges", "surendettement"]
+    },
+
+    "A_prof": {
+      "nom_complet": "Ancienneté professionnelle",
+      "symbole": "A_prof",
+      "categorie": "caracteristiques_client",
+      "type": "duree",
+      "unite": "années",
+      "valeur_defaut": null,
+      "plage_min": 0,
+      "plage_max": 50,
+      "description": "Nombre d'années passées dans l'emploi actuel ou dans le même secteur. Indicateur de stabilité professionnelle.",
+      "comment_determiner": "Attestation employeur, bulletins de salaire, déclaration sur l'honneur.",
+      "impact": "Stabilité réduit le risque de perte d'emploi → risque de défaut plus faible.",
+      "formule_liee": "Bonus_anciennete = min(A_prof, 10) / 10 × w₄",
+      "exemple_calcul": "A_prof=3 ans → bonus = 0.3 × w₄ dans calcul PD",
+      "recommandations": [
+        "<1 an : risque accru",
+        "1-3 ans : situation normale",
+        "3-10 ans : bonus progressif",
+        ">10 ans : bonus maximum"
+      ],
+      "mots_cles": ["ancienneté", "stabilité", "emploi", "CDI"]
+    },
+
+    "N_prets": {
+      "nom_complet": "Nombre de prêts existants",
+      "symbole": "N_prets",
+      "categorie": "caracteristiques_client",
+      "type": "nombre",
+      "unite": "prêts",
+      "valeur_defaut": null,
+      "plage_min": 0,
+      "plage_max": 10,
+      "description": "Nombre total de crédits en cours chez toutes les institutions. Indicateur de dépendance au crédit.",
+      "comment_determiner": "Consultation FICP (Fichier national des Incidents de remboursement des Crédits aux Particuliers).",
+      "impact": "Multiples crédits → risque de surendettement → PD augmentée.",
+      "formule_liee": "Pénalité_multicrédit = w₃ × N_prets",
+      "exemple_calcul": "N_prets=3, w₃=0.5 → pénalité = 1.5 points dans calcul PD",
+      "recommandations": [
+        "0-1 prêt : normal",
+        "2-3 prêts : vigilance",
+        "4+ prêts : risque accru",
+        "Considérer le montant total des prêts"
+      ],
+      "mots_cles": ["multicrédit", "surendettement", "FICP", "dettes"]
+    },
+
+    "PD": {
+      "nom_complet": "Probabilité de Défaut",
+      "symbole": "PD",
+      "categorie": "calcul_probabilite_defaut",
+      "type": "probabilite",
+      "unite": "%",
+      "valeur_defaut": null,
+      "plage_min": 0.1,
+      "plage_max": 15.0,
+      "description": "Probabilité estimée qu'un client fasse défaut sur son prêt dans les 12 mois suivants.",
+      "comment_determiner": "PD = 1 / (1 + exp(-z + z_offset)) où z est un score composite.",
+      "impact": "Détermine la prime de risque et les provisions. PD élevée → taux plus élevé pour compenser le risque.",
+      "formule_liee": "Prime_risque = β × PD",
+      "exemple_calcul": "PD=2.1%, β=0.35 → prime_risque = 0.735%",
+      "recommandations": [
+        "<1% : risque très faible",
+        "1-3% : risque modéré",
+        "3-6% : risque élevé",
+        ">6% : risque très élevé (refus probable)"
+      ],
+      "mots_cles": ["probabilité", "défaut", "risque", "scoring"]
+    },
+
+    "w1": {
+      "nom_complet": "Poids score de crédit",
+      "symbole": "w₁",
+      "categorie": "calcul_probabilite_defaut",
+      "type": "coefficient",
+      "unite": "sans unité",
+      "valeur_defaut": 5.0,
+      "plage_min": 1.0,
+      "plage_max": 10.0,
+      "description": "Importance relative du score de crédit dans le calcul du score composite z pour la PD.",
+      "comment_determiner": "Analyse statistique des défauts historiques. Le score de crédit est généralement le facteur le plus prédictif.",
+      "impact": "w₁ élevé → le score de crédit influence fortement la PD. w₁ faible → autres facteurs plus importants.",
+      "formule_liee": "z = w₁×(1 - S_norm) + w₂×D/R + ...",
+      "exemple_calcul": "S_norm=0.84, w₁=5 → contribution = 5×(1-0.84)=0.8",
+      "recommandations": [
+        "Typique : 4.0-6.0",
+        "Pays avec bon scoring : 5.0-7.0",
+        "Score peu fiable : 2.0-3.0",
+        "Doit être le poids le plus élevé"
+      ],
+      "mots_cles": ["poids", "coefficient", "importance", "scoring"]
+    },
+
+    "w2": {
+      "nom_complet": "Poids ratio d'endettement",
+      "symbole": "w₂",
+      "categorie": "calcul_probabilite_defaut",
+      "type": "coefficient",
+      "unite": "sans unité",
+      "valeur_defaut": 3.0,
+      "plage_min": 1.0,
+      "plage_max": 8.0,
+      "description": "Importance du ratio dette/revenu dans le calcul de la PD. Mesure la pression financière actuelle.",
+      "comment_determiner": "Analyse des défauts : les clients très endettés font plus facilement défaut.",
+      "impact": "w₂ élevé → l'endettement actuel est fortement pénalisé. Important pour détecter le surendettement.",
+      "formule_liee": "Contribution = w₂ × D/R",
+      "exemple_calcul": "D/R=0.25, w₂=3 → contribution = 0.75",
+      "recommandations": [
+        "Typique : 2.5-3.5",
+        "Pays avec fort endettement : 3.0-4.0",
+        "Second facteur en importance après le score"
+      ],
+      "mots_cles": ["endettement", "ratio", "poids", "pression financière"]
+    },
+
+    "beta_risk": {
+      "nom_complet": "Facteur de conversion PD → prime de risque",
+      "symbole": "β",
+      "categorie": "calcul_probabilite_defaut",
+      "type": "multiplicateur",
+      "unite": "sans unité",
+      "valeur_defaut": 0.35,
+      "plage_min": 0.1,
+      "plage_max": 1.0,
+      "description": "Multiplicateur pour convertir la probabilité de défaut en prime de risque appliquée au taux d'intérêt.",
+      "comment_determiner": "Basé sur la tolérance au risque de la banque et la concurrence. Doit assurer la rentabilité sans perdre de clients.",
+      "impact": "β élevé → prime de risque élevée → taux minimum élevé. β faible → compétitivité mais risque de sous-tarification.",
+      "formule_liee": "Prime_risque = PD × β",
+      "exemple_calcul": "PD=2%, β=0.35 → prime_risque = 0.7%",
+      "recommandations": [
+        "Valeur réaliste : 0.3-0.5",
+        "Segment risqué : 0.4-0.6",
+        "Segment sûr : 0.2-0.3",
+        "À éviter : >0.8 (trop pénalisant)"
+      ],
+      "mots_cles": ["facteur", "prime", "risque", "conversion"]
+    },
+
+    "scenario_actif": {
+      "nom_complet": "Scénario économique actif",
+      "symbole": "scenario",
+      "categorie": "scenarios_economiques",
+      "type": "categorie",
+      "unite": "sans unité",
+      "valeur_defaut": "normal",
+      "plage_min": null,
+      "plage_max": null,
+      "description": "Scénario macroéconomique considéré pour les calculs. Ajuste les paramètres de risque et de demande.",
+      "comment_determiner": "Analyse conjoncturelle, indicateurs avancés, prévisions des institutions.",
+      "impact": "Modifie les facteurs PD et demande selon le contexte économique.",
+      "formule_liee": "PD_ajustée = PD × facteur_scenario_PD",
+      "exemple_calcul": "Scénario crise : PD × 1.5, demande × 0.7",
+      "recommandations": [
+        "Normal : facteurs = 1.0",
+        "Crise : PD×1.5, demande×0.7",
+        "Expansion : PD×0.85, demande×1.3",
+        "Réviser mensuellement"
+      ],
+      "mots_cles": ["scénario", "conjoncture", "économie", "cycle"]
+    },
+
+    "capital_disponible": {
+      "nom_complet": "Capital disponible pour prêts",
+      "symbole": "K",
+      "categorie": "capital_et_portefeuille",
+      "type": "montant",
+      "unite": "€",
+      "valeur_defaut": 10000000,
+      "plage_min": 100000,
+      "plage_max": 1000000000,
+      "description": "Montant total que la banque peut prêter, limité par les ratios de solvabilité (Bâle III) et la liquidité.",
+      "comment_determiner": "Capital réglementaire × effet de levier autorisé. Contrainte de capacité d'octroi.",
+      "impact": "Contrainte de volume total. Quand K est presque épuisé, les taux doivent augmenter pour rationner la demande.",
+      "formule_liee": "∑V_ijk ≤ K",
+      "exemple_calcul": "K=10M€, prêts existants=7M€ → capacité restante=3M€",
+      "recommandations": [
+        "Suivre quotidiennement l'utilisation",
+        "Anticiper les besoins saisonniers",
+        "Garder une réserve de sécurité (10-20%)",
+        "Ajuster les taux selon la disponibilité"
+      ],
+      "mots_cles": ["capital", "solvabilité", "Bâle", "liquidité"]
+    },
+
+    "prime_duree": {
+      "nom_complet": "Prime pour durée longue",
+      "symbole": "prime_duree",
+      "categorie": "parametres_avances",
+      "type": "taux_percentage",
+      "unite": "% par an",
+      "valeur_defaut": 0.05,
+      "plage_min": 0.0,
+      "plage_max": 0.3,
+      "description": "Prime additionnelle appliquée par année de durée du prêt. Compense le risque accru sur longue période.",
+      "comment_determiner": "Analyse historique des défauts selon la durée. Risque accru avec la durée (incertitude économique).",
+      "impact": "Allonge la durée → augmente le taux. Important pour les prêts >10 ans.",
+      "formule_liee": "Taux_ajusté = Taux_base + (duree - 5) × prime_duree",
+      "exemple_calcul": "duree=15 ans, prime=0.05%/an → ajout = 0.5%",
+      "recommandations": [
+        "Standard : 0.03-0.07%/an",
+        "Immobilier : 0.04-0.06%/an",
+        "À court terme : 0%/an (<3 ans)",
+        "Ajuster selon la courbe des taux"
+      ],
+      "mots_cles": ["durée", "terme", "long terme", "incertitude"]
+    },
+
+    "bonus_apport": {
+      "nom_complet": "Bonus pour apport personnel important",
+      "symbole": "bonus_apport",
+      "categorie": "parametres_avances",
+      "type": "taux_percentage",
+      "unite": "%",
+      "valeur_defaut": -0.1,
+      "plage_min": -0.5,
+      "plage_max": 0.0,
+      "description": "Réduction de taux accordée lorsque le client apporte une part importante de ses fonds propres.",
+      "comment_determiner": "Apport ≥ seuil (ex: 20%). Récompense l'effort d'épargne et réduit le risque LGD.",
+      "impact": "Apport élevé → engagement client fort → risque réduit → taux plus bas.",
+      "formule_liee": "Taux_final = Taux_calculé + bonus_apport",
+      "exemple_calcul": "Taux=4.5%, apport 25% → bonus -0.1% → taux final=4.4%",
+      "recommandations": [
+        "Seuil typique : 20% du montant",
+        "Bonus : -0.1% à -0.3%",
+        "Immobilier seulement",
+        "Limiter à -0.5% maximum"
+      ],
+      "mots_cles": ["apport", "bonus", "épargne", "effort personnel"]
+    }
+  },
+
+  "notes_importantes": [
+    "Tous les taux sont exprimés en pourcentage annuel",
+    "Les plages indiquées sont des recommandations, ajustables selon la politique de la banque",
+    "Les valeurs par défaut sont basées sur des conditions économiques normales",
+    "Toujours vérifier la conformité réglementaire avant modification"
+  ]
+}

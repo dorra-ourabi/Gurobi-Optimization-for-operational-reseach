@@ -1,0 +1,892 @@
+{
+  "metadata": {
+    "version": "3.0",
+    "derniere_modification": "2024-12-04",
+    "description": "Configuration optimisée avec valeurs réalistes pour éviter r_min > r_max"
+  },
+  
+  "types_prets": {
+    "categories": [
+      "immobilier",
+      "automobile",
+      "personnel",
+      "professionnel",
+      "etudiant"
+    ],
+    "descriptions": {
+      "immobilier": "Prêt pour l'achat d'un bien immobilier",
+      "automobile": "Prêt pour l'achat d'un véhicule",
+      "personnel": "Crédit à la consommation",
+      "professionnel": "Crédit pour investissement professionnel",
+      "etudiant": "Prêt pour financement études"
+    }
+  },
+  
+  "segments_clients": {
+    "categories": [
+      "particulier_faible",
+      "particulier_moyen",
+      "particulier_eleve",
+      "professionnel_pme",
+      "primo_accedant",
+      "client_fidele",
+      "nouveau_client"
+    ],
+    "descriptions": {
+      "particulier_faible": "Particulier avec score de crédit faible (300-600)",
+      "particulier_moyen": "Particulier avec score de crédit moyen (600-720)",
+      "particulier_eleve": "Particulier avec score de crédit élevé (720-850)",
+      "professionnel_pme": "Professionnel ou PME",
+      "primo_accedant": "Premier achat immobilier",
+      "client_fidele": "Client existant de la banque (> 2 ans)",
+      "nouveau_client": "Nouveau client de la banque"
+    }
+  },
+  
+  "durees": {
+    "court_terme": {
+      "min_annees": 0.5,
+      "max_annees": 2,
+      "description": "Prêt à court terme (0.5 à 2 ans)"
+    },
+    "moyen_terme": {
+      "min_annees": 2,
+      "max_annees": 7,
+      "description": "Prêt à moyen terme (2 à 7 ans)"
+    },
+    "long_terme": {
+      "min_annees": 7,
+      "max_annees": 30,
+      "description": "Prêt à long terme (7 à 30 ans)"
+    }
+  },
+  
+  "parametres_macroeconomiques": {
+    "taux_directeur_bce": {
+      "valeur": 4.0,
+      "unite": "%",
+      "min": 0.0,
+      "max": 10.0,
+      "variable_temps": false,
+      "description": "Taux directeur BCE (τ_BCE)",
+      "note": "Valeur augmentée pour refléter la réalité 2024"
+    },
+    "taux_euribor_3m": {
+      "valeur": 3.9,
+      "unite": "%",
+      "min": 0.0,
+      "max": 10.0,
+      "variable_temps": false,
+      "description": "Taux EURIBOR 3 mois (τ_IB)",
+      "note": "Aligné sur les taux actuels du marché"
+    },
+    "taux_euribor_12m": {
+      "valeur": 4.1,
+      "unite": "%",
+      "min": 0.0,
+      "max": 10.0,
+      "variable_temps": false,
+      "description": "Taux EURIBOR 12 mois",
+      "note": "Légèrement supérieur au 3 mois (courbe normale)"
+    },
+    "taux_inflation": {
+      "valeur": 2.8,
+      "unite": "%",
+      "min": -2.0,
+      "max": 15.0,
+      "variable_temps": true,
+      "historique": [
+        2.5,
+        2.7,
+        2.8
+      ],
+      "description": "Taux d'inflation annuel (π_t)",
+      "note": "Inflation modérée cible BCE"
+    },
+    "croissance_economique": {
+      "valeur": 1.2,
+      "unite": "%",
+      "min": -10.0,
+      "max": 15.0,
+      "variable_temps": true,
+      "description": "Taux de croissance du PIB (g_eco)",
+      "note": "Croissance modeste en phase de resserrement monétaire"
+    },
+    "taux_chomage": {
+      "valeur": 7.5,
+      "unite": "%",
+      "min": 0.0,
+      "max": 30.0,
+      "description": "Taux de chômage national",
+      "note": "Taux structurel européen"
+    }
+  },
+  
+  "couts_et_risques": {
+    "cout_refinancement": {
+      "valeur": 4.3,
+      "unite": "%",
+      "min": 1.0,
+      "max": 10.0,
+      "formule": "taux_bce + spread_bancaire",
+      "description": "Coût de refinancement (c_ref)",
+      "note": "BCE 4.0% + spread 0.3% = 4.3% réaliste"
+    },
+    "spread_bancaire": {
+      "valeur": 0.3,
+      "unite": "%",
+      "min": 0.1,
+      "max": 1.5,
+      "description": "Spread ajouté au taux BCE",
+      "note": "Spread réaliste pour une banque commerciale"
+    },
+    "marge_minimale": {
+      "valeur": 0.8,
+      "unite": "%",
+      "min": 0.3,
+      "max": 3.0,
+      "description": "Marge de profit minimum exigée",
+      "note": "Augmentée pour assurer une rentabilité réaliste"
+    },
+    "perte_en_cas_defaut_LGD": {
+      "valeur": 40.0,
+      "unite": "%",
+      "min": 20.0,
+      "max": 80.0,
+      "description": "Loss Given Default - Perte si client ne rembourse pas",
+      "note": "Valeur réaliste avec garanties (45% était trop élevé)"
+    },
+    "couts_operationnels": {
+      "immobilier": {
+        "valeur": 1200,
+        "unite": "€",
+        "min": 500,
+        "max": 5000,
+        "description": "Coût traitement dossier immobilier (c_op^immo)",
+        "note": "Réduction pour refléter la digitalisation"
+      },
+      "automobile": {
+        "valeur": 400,
+        "unite": "€",
+        "min": 200,
+        "max": 2000,
+        "description": "Coût traitement dossier automobile (c_op^auto)",
+        "note": "Processus simplifié"
+      },
+      "personnel": {
+        "valeur": 250,
+        "unite": "€",
+        "min": 100,
+        "max": 1000,
+        "description": "Coût traitement dossier personnel (c_op^perso)",
+        "note": "Automatisation partielle"
+      },
+      "professionnel": {
+        "valeur": 800,
+        "unite": "€",
+        "min": 300,
+        "max": 5000,
+        "description": "Coût traitement dossier professionnel (c_op^pro)",
+        "note": "Analyse plus complexe mais processus optimisé"
+      },
+      "etudiant": {
+        "valeur": 200,
+        "unite": "€",
+        "min": 100,
+        "max": 1000,
+        "description": "Coût traitement dossier étudiant (c_op^etudiant)",
+        "note": "Processus standardisé"
+      }
+    },
+    "provisions_risque": {
+      "taux_provision": {
+        "valeur": 1.0,
+        "unite": "%",
+        "min": 0.5,
+        "max": 5.0,
+        "description": "Taux de provision pour risque (P_risk)",
+        "note": "Réduit pour éviter de surcharger r_min"
+      },
+      "fonds_garantie": {
+        "valeur": 500000,
+        "unite": "€",
+        "min": 100000,
+        "max": 10000000,
+        "description": "Fonds de garantie disponible",
+        "note": "Augmenté pour plus de sécurité"
+      }
+    }
+  },
+  
+  "contraintes_reglementaires": {
+    "ratio_endettement_max": {
+      "valeur": 35.0,
+      "unite": "%",
+      "min": 25.0,
+      "max": 45.0,
+      "description": "Ratio Dette/Revenu maximum (D/R ≤ 35%)",
+      "note": "35% avec dérogation, 33% sans"
+    },
+    "score_credit_minimum": {
+      "valeur": 580,
+      "unite": "points",
+      "min": 300,
+      "max": 850,
+      "description": "Score de crédit minimum (S_credit)",
+      "note": "Légèrement réduit pour plus de flexibilité"
+    },
+    "ratio_solvabilite_bale3": {
+      "valeur": 10.5,
+      "unite": "%",
+      "min": 8.0,
+      "max": 20.0,
+      "description": "Capital Adequacy Ratio Bâle III (CAR ≥ 10.5%)",
+      "note": "Au-dessus du minimum réglementaire"
+    },
+    "ratio_liquidite_LCR": {
+      "valeur": 120.0,
+      "unite": "%",
+      "min": 100.0,
+      "max": 200.0,
+      "description": "Liquidity Coverage Ratio (LCR ≥ 120%)",
+      "note": "Marge de sécurité supplémentaire"
+    },
+    "taux_usure": {
+      "immobilier": {
+        "court_terme": {
+          "valeur": 6.5,
+          "description": "Taux usure immo < 2 ans",
+          "note": "Augmenté pour permettre r_min < r_max"
+        },
+        "moyen_terme": {
+          "valeur": 5.8,
+          "description": "Taux usure immo 2-7 ans",
+          "note": "Réaliste avec taux BCE à 4%"
+        },
+        "long_terme": {
+          "valeur": 5.3,
+          "description": "Taux usure immo > 7 ans",
+          "note": "Légèrement plus bas pour long terme"
+        }
+      },
+      "automobile": {
+        "court_terme": {
+          "valeur": 8.2,
+          "description": "Taux usure auto < 2 ans",
+          "note": "Permet des marges réalistes"
+        },
+        "moyen_terme": {
+          "valeur": 7.5,
+          "description": "Taux usure auto 2-7 ans",
+          "note": "Valeur courante du marché"
+        },
+        "long_terme": {
+          "valeur": 7.0,
+          "description": "Taux usure auto > 7 ans",
+          "note": "Rare mais possible"
+        }
+      },
+      "personnel": {
+        "court_terme": {
+          "valeur": 10.5,
+          "description": "Taux usure personnel < 2 ans",
+          "note": "Crédit conso plus risqué"
+        },
+        "moyen_terme": {
+          "valeur": 9.5,
+          "description": "Taux usure personnel 2-7 ans",
+          "note": "Standard pour crédit personnel"
+        },
+        "long_terme": {
+          "valeur": 8.8,
+          "description": "Taux usure personnel > 7 ans",
+          "note": "Moins courant en personnel"
+        }
+      },
+      "professionnel": {
+        "court_terme": {
+          "valeur": 7.5,
+          "description": "Taux usure pro < 2 ans",
+          "note": "Pro moins réglementé que particulier"
+        },
+        "moyen_terme": {
+          "valeur": 6.8,
+          "description": "Taux usure pro 2-7 ans",
+          "note": "Taux compétitifs pour entreprises"
+        },
+        "long_terme": {
+          "valeur": 6.2,
+          "description": "Taux usure pro > 7 ans",
+          "note": "Investissements long terme"
+        }
+      },
+      "etudiant": {
+        "court_terme": {
+          "valeur": 5.5,
+          "description": "Taux usure étudiant < 2 ans",
+          "note": "Crédit étudiant subventionné"
+        },
+        "moyen_terme": {
+          "valeur": 4.8,
+          "description": "Taux usure étudiant 2-7 ans",
+          "note": "Taux bonifiés"
+        },
+        "long_terme": {
+          "valeur": 4.2,
+          "description": "Taux usure étudiant > 7 ans",
+          "note": "Très long terme possible pour études"
+        }
+      }
+    },
+    "TAEG_maximum": {
+      "description": "TAEG max = Taux usure (même valeur)",
+      "formule": "taux_usure + frais_dossier_annualises",
+      "note": "Respect strict des plafonds légaux"
+    }
+  },
+  
+  "parametres_marche": {
+    "demande_base": {
+      "valeur": 200,
+      "unite": "clients",
+      "min": 50,
+      "max": 5000,
+      "description": "Nombre de clients potentiels (D_0)",
+      "note": "Augmenté pour refléter un marché réel"
+    },
+    "part_marche_visee": {
+      "valeur": 12.0,
+      "unite": "%",
+      "min": 5.0,
+      "max": 30.0,
+      "description": "Part de marché cible (PM_target)",
+      "note": "Objectif réaliste pour une banque moyenne"
+    },
+    "marge_competitive_max": {
+      "valeur": 15.0,
+      "unite": "%",
+      "min": 5.0,
+      "max": 30.0,
+      "description": "Écart max acceptable vs concurrent",
+      "note": "Augmenté pour permettre plus de flexibilité"
+    },
+    "taux_concurrents": {
+      "immobilier": {
+        "court_terme": {
+          "valeur": 5.2,
+          "description": "Taux concurrent immo < 2 ans",
+          "note": "Réaliste avec BCE à 4%"
+        },
+        "moyen_terme": {
+          "valeur": 4.7,
+          "description": "Taux concurrent immo 2-7 ans",
+          "note": "Marché très concurrentiel"
+        },
+        "long_terme": {
+          "valeur": 4.3,
+          "description": "Taux concurrent immo > 7 ans",
+          "note": "Taux fixes avantageux"
+        }
+      },
+      "automobile": {
+        "court_terme": {
+          "valeur": 7.2,
+          "description": "Taux concurrent auto < 2 ans",
+          "note": "Crédit auto standard"
+        },
+        "moyen_terme": {
+          "valeur": 6.5,
+          "description": "Taux concurrent auto 2-7 ans",
+          "note": "Durée moyenne la plus courante"
+        },
+        "long_terme": {
+          "valeur": 6.0,
+          "description": "Taux concurrent auto > 7 ans",
+          "note": "Occasion récente"
+        }
+      },
+      "personnel": {
+        "court_terme": {
+          "valeur": 9.5,
+          "description": "Taux concurrent perso < 2 ans",
+          "note": "Crédit conso rapide"
+        },
+        "moyen_terme": {
+          "valeur": 8.8,
+          "description": "Taux concurrent perso 2-7 ans",
+          "note": "Standard personnel"
+        },
+        "long_terme": {
+          "valeur": 8.2,
+          "description": "Taux concurrent perso > 7 ans",
+          "note": "Rachat de crédits"
+        }
+      },
+      "professionnel": {
+        "court_terme": {
+          "valeur": 6.8,
+          "description": "Taux concurrent pro < 2 ans",
+          "note": "Découvert professionnel"
+        },
+        "moyen_terme": {
+          "valeur": 6.2,
+          "description": "Taux concurrent pro 2-7 ans",
+          "note": "Crédit équipement"
+        },
+        "long_terme": {
+          "valeur": 5.7,
+          "description": "Taux concurrent pro > 7 ans",
+          "note": "Investissement immobilier pro"
+        }
+      },
+      "etudiant": {
+        "court_terme": {
+          "valeur": 4.5,
+          "description": "Taux concurrent étudiant < 2 ans",
+          "note": "Année de césure"
+        },
+        "moyen_terme": {
+          "valeur": 3.9,
+          "description": "Taux concurrent étudiant 2-7 ans",
+          "note": "Durée standard études"
+        },
+        "long_terme": {
+          "valeur": 3.5,
+          "description": "Taux concurrent étudiant > 7 ans",
+          "note": "Doctorat + remboursement différé"
+        }
+      }
+    },
+    "elasticite_prix_demande": {
+      "immobilier": {
+        "particulier_faible": {
+          "valeur": -120,
+          "description": "ε_{immo,faible}",
+          "note": "Moins élastique car besoin essentiel"
+        },
+        "particulier_moyen": {
+          "valeur": -160,
+          "description": "ε_{immo,moyen}",
+          "note": "Élasticité moyenne"
+        },
+        "particulier_eleve": {
+          "valeur": -200,
+          "description": "ε_{immo,élevé}",
+          "note": "Plus élastique, peuvent négocier"
+        },
+        "primo_accedant": {
+          "valeur": -140,
+          "description": "ε_{immo,primo}",
+          "note": "Urgence d'achat réduit élasticité"
+        }
+      },
+      "automobile": {
+        "particulier_faible": {
+          "valeur": -80,
+          "description": "ε_{auto,faible}",
+          "note": "Besoin de transport"
+        },
+        "particulier_moyen": {
+          "valeur": -120,
+          "description": "ε_{auto,moyen}",
+          "note": "Marché concurrentiel"
+        },
+        "particulier_eleve": {
+          "valeur": -150,
+          "description": "ε_{auto,élevé}",
+          "note": "Peut différer l'achat"
+        }
+      },
+      "personnel": {
+        "particulier_faible": {
+          "valeur": -50,
+          "description": "ε_{perso,faible}",
+          "note": "Crédit urgent souvent"
+        },
+        "particulier_moyen": {
+          "valeur": -70,
+          "description": "ε_{perso,moyen}",
+          "note": "Plus de choix"
+        },
+        "particulier_eleve": {
+          "valeur": -90,
+          "description": "ε_{perso,élevé}",
+          "note": "Peut attendre ou épargner"
+        }
+      },
+      "professionnel": {
+        "professionnel_pme": {
+          "valeur": -100,
+          "description": "ε_{pro,PME}",
+          "note": "Investissements nécessaires"
+        }
+      },
+      "etudiant": {
+        "particulier_faible": {
+          "valeur": -30,
+          "description": "ε_{etudiant,faible}",
+          "note": "Besoin de financer études"
+        },
+        "particulier_moyen": {
+          "valeur": -40,
+          "description": "ε_{etudiant,moyen}",
+          "note": "Alternatives limitées"
+        }
+      }
+    }
+  },
+  
+  "caracteristiques_client": {
+    "score_credit": {
+      "min": 300,
+      "max": 850,
+      "segments": {
+        "tres_faible": {
+          "min": 300,
+          "max": 500,
+          "description": "Risque très élevé"
+        },
+        "faible": {
+          "min": 500,
+          "max": 600,
+          "description": "Risque élevé"
+        },
+        "moyen": {
+          "min": 600,
+          "max": 720,
+          "description": "Risque modéré"
+        },
+        "eleve": {
+          "min": 720,
+          "max": 850,
+          "description": "Risque faible"
+        }
+      },
+      "description": "Score de crédit (S_credit)"
+    },
+    "revenu_mensuel": {
+      "min": 800,
+      "max": 50000,
+      "unite": "€",
+      "description": "Revenu mensuel net (R_mensuel)",
+      "note": "Minimum au SMIC"
+    },
+    "charges_mensuelles": {
+      "min": 0,
+      "max": 20000,
+      "unite": "€",
+      "description": "Charges mensuelles totales existantes"
+    },
+    "apport_personnel": {
+      "min": 0,
+      "max": 100,
+      "unite": "%",
+      "recommande_immo": 15,
+      "description": "Apport personnel en % du montant (A_p)",
+      "note": "15% recommandé pour l'immobilier"
+    },
+    "anciennete_professionnelle": {
+      "min": 0,
+      "max": 50,
+      "unite": "années",
+      "description": "Ancienneté dans l'emploi actuel (A_prof)"
+    },
+    "nombre_prets_existants": {
+      "min": 0,
+      "max": 10,
+      "description": "Nombre de prêts déjà en cours (N_prets)"
+    },
+    "historique_paiement": {
+      "min": 0.0,
+      "max": 1.0,
+      "description": "Score historique paiement 0=mauvais, 1=excellent (H_pay)"
+    },
+    "type_contrat": {
+      "options": [
+        "CDI",
+        "CDD",
+        "Intérimaire",
+        "Indépendant",
+        "Fonctionnaire"
+      ],
+      "poids_risque": {
+        "CDI": 1.0,
+        "Fonctionnaire": 0.8,
+        "CDD": 1.3,
+        "Intérimaire": 1.5,
+        "Indépendant": 1.4
+      }
+    },
+    "statut_client": {
+      "nouveau": {
+        "bonus_taux": 0.0,
+        "description": "Nouveau client (< 6 mois)"
+      },
+      "recent": {
+        "bonus_taux": -0.08,
+        "description": "Client récent (6 mois - 2 ans)",
+        "note": "Bonus augmenté pour fidélisation"
+      },
+      "fidele": {
+        "bonus_taux": -0.20,
+        "description": "Client fidèle (> 2 ans)",
+        "note": "Réduction significative pour fidélité"
+      },
+      "premium": {
+        "bonus_taux": -0.30,
+        "description": "Client premium (> 5 ans + plusieurs produits)",
+        "note": "Taux préférentiel"
+      }
+    }
+  },
+  
+  "calcul_probabilite_defaut": {
+    "poids_score_credit": {
+      "valeur": 4.5,
+      "unite": "coefficient",
+      "min": 2.0,
+      "max": 8.0,
+      "description": "Poids w1 dans calcul PD",
+      "note": "Réduit pour équilibrer avec autres facteurs"
+    },
+    "poids_ratio_endettement": {
+      "valeur": 2.5,
+      "unite": "coefficient",
+      "min": 1.0,
+      "max": 6.0,
+      "description": "Poids w2 dans calcul PD",
+      "note": "Réduit pour éviter PD trop élevées"
+    },
+    "poids_nombre_prets": {
+      "valeur": 0.4,
+      "unite": "coefficient",
+      "min": 0.1,
+      "max": 2.0,
+      "description": "Poids w3 dans calcul PD",
+      "note": "Légère pénalité pour multi-crédits"
+    },
+    "poids_anciennete_pro": {
+      "valeur": 0.25,
+      "unite": "coefficient",
+      "min": 0.0,
+      "max": 2.0,
+      "description": "Poids w4 dans calcul PD",
+      "note": "Bonus modéré pour stabilité"
+    },
+    "poids_historique_paiement": {
+      "valeur": 1.5,
+      "unite": "coefficient",
+      "min": 0.5,
+      "max": 4.0,
+      "description": "Poids w5 dans calcul PD",
+      "note": "Historique important mais pas décisif"
+    },
+    "poids_type_contrat": {
+      "valeur": 1.2,
+      "unite": "coefficient",
+      "min": 0.5,
+      "max": 3.0,
+      "description": "Poids w6 dans calcul PD",
+      "note": "Impact modéré du type de contrat"
+    },
+    "decalage_logistique": {
+      "valeur": 2.8,
+      "unite": "coefficient",
+      "min": 1.0,
+      "max": 5.0,
+      "description": "Décalage z_offset fonction logistique",
+      "note": "Ajusté pour PD réalistes (1-5% en moyenne)"
+    },
+    "PD_minimum": {
+      "valeur": 0.2,
+      "unite": "%",
+      "min": 0.05,
+      "max": 2.0,
+      "description": "Probabilité de défaut minimale",
+      "note": "Même les meilleurs clients ont un risque minimal"
+    },
+    "PD_maximum": {
+      "valeur": 12.0,
+      "unite": "%",
+      "min": 5.0,
+      "max": 30.0,
+      "description": "Probabilité de défaut maximale",
+      "note": "Plafond réaliste avant refus automatique"
+    },
+    "facteur_prime_risque": {
+      "valeur": 0.25,
+      "unite": "multiplicateur",
+      "min": 0.1,
+      "max": 0.8,
+      "description": "β: Convertit PD en prime de risque (PD × β)",
+      "note": "Réduit à 0.25 pour éviter r_min > r_max"
+    },
+    "ajustement_segment": {
+      "primo_accedant": {
+        "multiplicateur_PD": 1.15,
+        "description": "Primo-accédant = risque +15%",
+        "note": "Légère majoration pour inexpérience"
+      },
+      "professionnel_pme": {
+        "multiplicateur_PD": 1.05,
+        "description": "PME = risque +5%",
+        "note": "Risque légèrement supérieur"
+      },
+      "client_fidele": {
+        "multiplicateur_PD": 0.80,
+        "description": "Client fidèle = risque -20%",
+        "note": "Réduction importante pour fidélité"
+      }
+    }
+  },
+  
+  "scenarios_economiques": {
+    "scenario_actif": {
+      "valeur": "normal",
+      "options": [
+        "normal",
+        "crise",
+        "expansion",
+        "recession",
+        "stagnation"
+      ],
+      "description": "Scénario économique actuel"
+    },
+    "normal": {
+      "facteur_PD": 1.0,
+      "facteur_demande": 1.0,
+      "description": "Conditions économiques normales"
+    },
+    "crise": {
+      "facteur_PD": 1.4,
+      "facteur_demande": 0.6,
+      "augmentation_chomage": 3.0,
+      "description": "Crise économique - PD ×1.4, Demande ×0.6",
+      "note": "Ajustements modérés pour plus de réalisme"
+    },
+    "expansion": {
+      "facteur_PD": 0.9,
+      "facteur_demande": 1.2,
+      "description": "Expansion économique - PD ×0.9, Demande ×1.2"
+    },
+    "recession": {
+      "facteur_PD": 1.2,
+      "facteur_demande": 0.8,
+      "description": "Récession - PD ×1.2, Demande ×0.8"
+    },
+    "stagnation": {
+      "facteur_PD": 1.05,
+      "facteur_demande": 0.9,
+      "description": "Stagnation économique"
+    }
+  },
+  
+  "capital_et_portefeuille": {
+    "capital_disponible_total": {
+      "valeur": 5000000,
+      "unite": "€",
+      "min": 1000000,
+      "max": 100000000,
+      "description": "Capital total disponible pour prêts",
+      "note": "Montant réaliste pour une agence"
+    },
+    "quotas_par_type": {
+      "immobilier": {
+        "quota_max": 3000000,
+        "pourcentage_max": 70,
+        "description": "Quota maximum prêts immobiliers"
+      },
+      "automobile": {
+        "quota_max": 1000000,
+        "pourcentage_max": 25,
+        "description": "Quota maximum prêts automobiles"
+      },
+      "personnel": {
+        "quota_max": 800000,
+        "pourcentage_max": 20,
+        "description": "Quota maximum prêts personnels"
+      },
+      "professionnel": {
+        "quota_max": 1500000,
+        "pourcentage_max": 35,
+        "description": "Quota maximum prêts professionnels"
+      },
+      "etudiant": {
+        "quota_max": 300000,
+        "pourcentage_max": 8,
+        "description": "Quota maximum prêts étudiants"
+      }
+    },
+    "diversification": {
+      "activer": true,
+      "ratio_min_par_type": 5,
+      "ratio_max_par_type": 60,
+      "description": "Contraintes de diversification du portefeuille",
+      "note": "Activer pour limiter les risques de concentration"
+    }
+  },
+  
+  "parametres_avances": {
+    "activer_ajustement_duree": {
+      "valeur": true,
+      "description": "Ajuster prime de risque selon durée"
+    },
+    "prime_duree_par_an": {
+      "valeur": 0.04,
+      "unite": "%",
+      "min": 0.0,
+      "max": 0.15,
+      "description": "Prime additionnelle par année de prêt",
+      "note": "Réduite pour éviter d'exploser r_min"
+    },
+    "activer_bonus_apport": {
+      "valeur": true,
+      "description": "Bonus taux si apport > seuil"
+    },
+    "seuil_apport_bonus": {
+      "valeur": 15,
+      "unite": "%",
+      "min": 10,
+      "max": 50,
+      "description": "Apport minimum pour bonus",
+      "note": "Seuil réduit pour encourager l'apport"
+    },
+    "reduction_taux_apport": {
+      "valeur": 0.08,
+      "unite": "%",
+      "min": 0.0,
+      "max": 0.3,
+      "description": "Réduction taux si apport suffisant",
+      "note": "Réduction modérée"
+    },
+    "activer_frais_dossier": {
+      "valeur": true,
+      "description": "Inclure frais de dossier dans TAEG"
+    },
+    "activer_assurance": {
+      "valeur": true,
+      "description": "Inclure assurance emprunteur"
+    },
+    "taux_assurance_moyen": {
+      "valeur": 0.25,
+      "unite": "%",
+      "min": 0.1,
+      "max": 0.5,
+      "description": "Taux assurance emprunteur moyen",
+      "note": "Valeur réaliste"
+    }
+  },
+  
+  "verification_compatibilite": {
+    "note": "Avec ces valeurs, pour un client moyen (score 650) et un prêt auto 5 ans :",
+    "calcul_exemple": {
+      "c_ref": "4.3%",
+      "m_min": "0.8%",
+      "PD_moyenne": "≈3.5%",
+      "prime_risque": "3.5% × 0.25 = 0.875%",
+      "r_min_theorique": "4.3 + 0.8 + 0.875 = 5.975%",
+      "r_max_theorique": "min(7.5%, 6.5% × 1.15 = 7.475%) = 7.475%",
+      "conclusion": "5.975% < 7.475% → MODÈLE FONCTIONNEL "
+    }
+  }
+}

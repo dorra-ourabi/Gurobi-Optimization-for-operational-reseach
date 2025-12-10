@@ -1,0 +1,23 @@
+# Requirements pour le projet de Tarification Optimale
+
+# Solveur d'optimisation
+gurobipy>=11.0.0
+
+# Interface graphique
+PyQt5>=5.15.0
+PyQt5-tools>=5.15.0  # Pour Qt Designer
+
+# Calcul scientifique
+numpy>=1.24.0
+pandas>=2.0.0
+
+# Visualisation (optionnel pour graphiques)
+matplotlib>=3.7.0
+seaborn>=0.12.0
+
+# Export de rapports (optionnel)
+reportlab>=4.0.0  # Pour génération PDF
+openpyxl>=3.1.0   # Pour export Excel
+
+# Utilitaires
+python-dateutil>=2.8.0
