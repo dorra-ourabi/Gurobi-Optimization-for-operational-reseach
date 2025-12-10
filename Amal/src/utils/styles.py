@@ -1,4 +1,4 @@
-from .constants import *
+from Amal.src.utils.constants import *
 
 class Styles:
     """Centralized style definitions"""

@@ -55,7 +55,7 @@ class GraphWidget(QWidget):
     
     def _draw_tasks(self, painter, positions):
         """Dessine les nœuds des tâches"""
-        from src.utils.constants import MACHINE_COLORS
+        from Amal.src.utils.constants import MACHINE_COLORS
         
         for task in self.tasks:
             x, y = positions[task['id']]

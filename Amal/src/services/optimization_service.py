@@ -6,7 +6,7 @@ MachineScheduler = None
 
 try:
     import importlib.util
-    spec = importlib.util.spec_from_file_location("machine_scheduler", "src/machine_scheduler.py")
+    spec = importlib.util.spec_from_file_location("machine_scheduler", "Amal/src/machine_scheduler.py")
     if spec and spec.loader:
         module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(module)

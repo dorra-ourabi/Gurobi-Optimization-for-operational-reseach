@@ -1,0 +1,15 @@
+{
+  "_metadata": {
+    "last_modified": "2025-12-10T11:27:22.749838",
+    "version": "1.0",
+    "default_config": "config\\default_config.json"
+  },
+  "config": {
+    "_metadata": {
+      "last_modified": "2025-12-10T11:26:08.777574",
+      "version": "1.0",
+      "default_config": "config\\default_config.json"
+    },
+    "config": {}
+  }
+}

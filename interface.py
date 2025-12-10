@@ -347,7 +347,7 @@ class ProfessionalHub(QMainWindow):
                 self.projects_windows["loan"].activateWindow()
         except ImportError as e:
             print(f"Erreur d'import: {e}")
-            print("→ Vérifiez que le fichier Oumayma/main.py existe et contient une classe MainWindow")
+            print("→ Vérifiez que le fichier Amal/main.py existe et contient une classe MainWindow")
         except Exception as e:
             print(f"Erreur lors de l'ouverture: {e}")
     def open_machine_scheduling(self):
