@@ -187,12 +187,12 @@ class ProfessionalHub(QMainWindow):
                 "key": "gas_distribution"
             },
             {
-                "title": "Affectation de machines aux tâches qui ne peuvent être faites en même temps",
-                "description": "Ordonnancement optimal des machines pour l'execution des taches non simultanées",
-                "icon": "⚙️",
-                "category": "Production & Manifacturing",
+                "title": "Affectation Machines-Tâches",
+                "description": "Ordonnancement optimal des machines pour l'exécution de tâches non simultanées",
+                "icon": "🏭",
+                "category": "Production & Manufacturing",
                 "key": "machine_scheduling"
-            },
+            }
         ]
 
         # Créer les boutons de projets
@@ -353,10 +353,10 @@ class ProfessionalHub(QMainWindow):
     def open_machine_scheduling(self):
         """Ouvre le projet Amal - """
         try:
-            from Amal.src.gui.main_window import MainWindow
+            from Amal.src.gui.main_window import MachineTaskOptimizer
 
             if "loan" not in self.projects_windows or not self.projects_windows["machine"].isVisible():
-                self.projects_windows["machine"] = MainWindow()
+                self.projects_windows["machine"] = MachineTaskOptimizer()
                 self.projects_windows["machine"].show()
             else:
                 self.projects_windows["machine"].raise_()

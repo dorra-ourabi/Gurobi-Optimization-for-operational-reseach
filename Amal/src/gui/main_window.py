@@ -1,17 +1,17 @@
 from PyQt5.QtWidgets import (QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, 
                              QPushButton, QLabel, QLineEdit, QScrollArea, 
                              QFrame, QTabWidget, QMessageBox, QComboBox)
-from src.services.optimization_service import GUROBI_AVAILABLE, OptimizationThread
-from src.gui.widgets.task_card import TaskCard
-from src.gui.widgets.incompatibility_card import IncompatibilityCard
-from src.gui.widgets.stat_card import StatCard
-from src.gui.widgets.graph_widget import GraphWidget
-from src.gui.widgets.bar_chart_widget import BarChartWidget
-from src.gui.widgets.pie_chart_widget import PieChartWidget
-from src.gui.dialogs.add_incompatibility_dialog import AddIncompatibilityDialog
-from src.gui.dialogs.task_capacity_dialog import TaskCapacityDialog
-from src.utils.constants import MACHINE_COLORS
-from src.utils.styles import Styles
+from Amal.src.services.optimization_service import GUROBI_AVAILABLE, OptimizationThread
+from Amal.src.gui.widgets.task_card import TaskCard
+from Amal.src.gui.widgets.incompatibility_card import IncompatibilityCard
+from Amal.src.gui.widgets.stat_card import StatCard
+from Amal.src.gui.widgets.graph_widget import GraphWidget
+from Amal.src.gui.widgets.bar_chart_widget import BarChartWidget
+from Amal.src.gui.widgets.pie_chart_widget import PieChartWidget
+from Amal.src.gui.dialogs.add_incompatibility_dialog import AddIncompatibilityDialog
+from Amal.src.gui.dialogs.task_capacity_dialog import TaskCapacityDialog
+from Amal.src.utils.constants import MACHINE_COLORS
+from Amal.src.utils.styles import Styles
 class MachineTaskOptimizer(QMainWindow):
     def __init__(self):
         super().__init__()

@@ -1,7 +1,7 @@
 import sys
 from PyQt5.QtWidgets import QApplication
-from src.gui.main_window import MachineTaskOptimizer
-from src.gui.widgets.task_card import TaskCard
+from Amal.src.gui.main_window import MachineTaskOptimizer
+from Amal.src.gui.widgets.task_card import TaskCard
 
 def main():
     app = QApplication(sys.argv)
