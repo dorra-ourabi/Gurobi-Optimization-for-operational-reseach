@@ -3,18 +3,18 @@ from PyQt5.QtWidgets import (
     QMainWindow, QWidget, QVBoxLayout, 
     QTabWidget, QMessageBox
 )
-from config.config_manager import ConfigManager
-from models.gurobi_optimizer import GurobiOptimizer
+from Oumayma.config.config_manager import ConfigManager
+from Oumayma.models.gurobi_optimizer import GurobiOptimizer
 
 # Imports des onglets
-from models.gurobi_optimizerQuadratique import GurobiOptimizerQuad
-from models.risk_calculator import ClientProfile, PretDemande
-from ui.config_tab import ConfigurationTab
-from ui.client_tab import ClientTab
-from ui.analyse_tab import AnalyseTab
-from ui.portefeuille_tab import PortefeuilleTab
-from ui.documentation_tab import DocumentationTab
-from utils.validators import Validators
+from Oumayma.models.gurobi_optimizerQuadratique import GurobiOptimizerQuad
+from Oumayma.models.risk_calculator import ClientProfile, PretDemande
+from Oumayma.ui.config_tab import ConfigurationTab
+from Oumayma.ui.client_tab import ClientTab
+from Oumayma.ui.analyse_tab import AnalyseTab
+from Oumayma.ui.portefeuille_tab import PortefeuilleTab
+from Oumayma.ui.documentation_tab import DocumentationTab
+from Oumayma.utils.validators import Validators
 
 
 class MainWindow(QMainWindow):

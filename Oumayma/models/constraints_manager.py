@@ -1,5 +1,5 @@
-from config.config_manager import ConfigManager
-from models.risk_calculator import ClientProfile, PretDemande
+from Oumayma.config.config_manager import ConfigManager
+from Oumayma.models.risk_calculator import ClientProfile, PretDemande
 
 class ConstraintsManager:
     

@@ -11,7 +11,7 @@ from PyQt5.QtGui import QFont
 from PyQt5.QtCore import Qt
 import json
 
-from config.config_manager import ConfigManager
+from Oumayma.config.config_manager import ConfigManager
 
 
 class ConfigurationTab(QWidget):

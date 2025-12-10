@@ -6,10 +6,10 @@ from PyQt5.QtWidgets import (
 )
 from PyQt5.QtGui import QFont
 from PyQt5.QtCore import Qt, pyqtSignal
-from models.risk_calculator import ClientProfile, PretDemande
-from ui.shared_data import SharedData
+from Oumayma.models.risk_calculator import ClientProfile, PretDemande
+from Oumayma.ui.shared_data import SharedData
 from .threads import OptimizationThread
-from utils.validators import Validators 
+from Oumayma.utils.validators import Validators
 
 class ClientTab(QWidget):
     dossier_accepte = pyqtSignal(dict, int, float, str)  

@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 import numpy as np
 from typing import Dict
-from config.config_manager import ConfigManager
+from Oumayma.config.config_manager import ConfigManager
 
 @dataclass
 class ClientProfile:

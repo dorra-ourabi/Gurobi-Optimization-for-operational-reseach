@@ -1,6 +1,6 @@
 from typing import Tuple, Dict, Any
 
-from config.config_manager import ConfigManager
+from Oumayma.config.config_manager import ConfigManager
 
 class Validators:
     

@@ -13,7 +13,7 @@ import matplotlib.pyplot as plt
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 
-from models.risk_calculator import ClientProfile, PretDemande
+from Oumayma.models.risk_calculator import ClientProfile, PretDemande
 from .threads import OptimizationThread
 
 

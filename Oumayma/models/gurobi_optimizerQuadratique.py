@@ -4,10 +4,10 @@ import numpy as np
 from typing import Dict
 import math
 
-from config.config_manager import ConfigManager
-from models.risk_calculator import RiskCalculator, ClientProfile, PretDemande
-from models.constraints_manager import ConstraintsManager
-from models.market_analyzer import MarketAnalyzer
+from Oumayma.config.config_manager import ConfigManager
+from Oumayma.models.risk_calculator import RiskCalculator, ClientProfile, PretDemande
+from Oumayma.models.constraints_manager import ConstraintsManager
+from Oumayma.models.market_analyzer import MarketAnalyzer
 
 
 class GurobiOptimizerQuad:
