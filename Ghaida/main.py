@@ -1,9 +1,8 @@
-# main.py
-
 import sys
-from PySide6.QtWidgets import QApplication
-from PySide6.QtGui import QFont, QIcon
-from mkp_lab_exp import MainWindow, apply_light_palette  # Importez depuis votre fichier principal
+from qtpy.QtWidgets import QApplication
+from qtpy.QtGui import QFont, QIcon
+from Ghaida.ui import MainWindow, apply_light_palette
+
 
 def main():
     app = QApplication(sys.argv)
