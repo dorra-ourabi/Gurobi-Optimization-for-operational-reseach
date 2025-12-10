@@ -2,15 +2,15 @@
 import sys
 from PyQt5.QtWidgets import (QApplication, QMainWindow, QMessageBox,
                              QTableWidgetItem, QHeaderView)
-from ui.ui_placement import Ui_MainWindow
-from data.parser import parse_table_sites, parse_table_zones
-from model.optimizer import optimize_placement
+import Alla.ui.ui_placement
+from Alla.model.optimizer import optimize_placement
+from Alla.data.parser import parse_table_sites, parse_table_zones
 
 
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.ui = Ui_MainWindow()
+        self.ui = Alla.ui.Ui_MainWindow()
         self.ui.setupUi(self)
 
         #configuration des tableaux

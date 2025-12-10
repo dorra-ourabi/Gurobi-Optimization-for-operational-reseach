@@ -346,20 +346,43 @@ class ProfessionalHub(QMainWindow):
     def open_ambulance_placement(self):
         """Ouvre le projet Alla - Placement d'ambulances"""
         try:
+            import sys
+            import os
+
+            # DEBUG: Afficher le PYTHONPATH actuel
+            print("PYTHONPATH avant:", sys.path)
+
+            # Obtenir le chemin absolu du répertoire Alla
+            current_dir = os.path.dirname(os.path.abspath(__file__))
+            alla_dir = os.path.join(current_dir, "Alla")
+            parent_dir = os.path.dirname(current_dir)  # Répertoire parent
+
+            # Ajouter les chemins nécessaires
+            if alla_dir not in sys.path:
+                sys.path.insert(0, alla_dir)
+            if parent_dir not in sys.path:
+                sys.path.insert(0, parent_dir)
+
+            print("PYTHONPATH après:", sys.path)
+            print("Alla existe?", os.path.exists(alla_dir))
+
             from Alla.main import MainWindow
 
             if "ambulance" not in self.projects_windows or not self.projects_windows["ambulance"].isVisible():
-                print("coucou je suis la")
                 self.projects_windows["ambulance"] = MainWindow()
                 self.projects_windows["ambulance"].show()
             else:
                 self.projects_windows["ambulance"].raise_()
                 self.projects_windows["ambulance"].activateWindow()
         except ImportError as e:
-            print(f"❌ Erreur d'import: {e}")
+            print(f"Erreur d'import: {e}")
             print("→ Vérifiez que le fichier Alla/main.py existe et contient une classe MainWindow")
+            import traceback
+            traceback.print_exc()
         except Exception as e:
-            print(f"❌ Erreur lors de l'ouverture: {e}")
+            print(f"Erreur lors de l'ouverture: {e}")
+            import traceback
+            traceback.print_exc()
 
     def open_lab_experiments(self):
         """Ouvre le projet Ghaida - Expériences laboratoire"""
@@ -373,15 +396,15 @@ class ProfessionalHub(QMainWindow):
                 self.projects_windows["lab"].raise_()
                 self.projects_windows["lab"].activateWindow()
         except ImportError as e:
-            print(f"❌ Erreur d'import: {e}")
+            print(f"Erreur d'import: {e}")
             print("→ Vérifiez que le fichier Ghaida/main.py existe et contient une classe MainWindow")
         except Exception as e:
-            print(f"❌ Erreur lors de l'ouverture: {e}")
+            print(f"Erreur lors de l'ouverture: {e}")
 
     def open_gas_distribution(self):
         """Ouvre le projet Dorra - Distribution de gaz"""
         try:
-            from Dorra.main import MainWindow
+            from Dorra.IHM import MainWindow
 
             if "gas" not in self.projects_windows or not self.projects_windows["gas"].isVisible():
                 self.projects_windows["gas"] = MainWindow()
@@ -390,7 +413,7 @@ class ProfessionalHub(QMainWindow):
                 self.projects_windows["gas"].raise_()
                 self.projects_windows["gas"].activateWindow()
         except ImportError as e:
-            print(f"❌ Erreur d'import: {e}")
+            print(f"Erreur d'import: {e}")
             print("→ Vérifiez que le fichier Dorra/main.py existe et contient une classe MainWindow")
         except Exception as e:
             print(f"❌ Erreur lors de l'ouverture: {e}")

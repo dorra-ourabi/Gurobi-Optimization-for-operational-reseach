@@ -9,7 +9,7 @@ from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
 import matplotlib.pyplot as plt
 import networkx as nx
 
-from EnergiePl import ModeleGaz  # ton modèle enrichi
+from Dorra.EnergiePl import ModeleGaz  # ton modèle enrichi
 
 # --- Thread de résolution ---
 class SolverWorker(QThread):
