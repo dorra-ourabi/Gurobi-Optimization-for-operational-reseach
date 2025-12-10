@@ -185,7 +185,14 @@ class ProfessionalHub(QMainWindow):
                 "icon": "⚙️",
                 "category": "Énergie & Industrie",
                 "key": "gas_distribution"
-            }
+            },
+            {
+                "title": "Affectation de machines aux tâches qui ne peuvent être faites en même temps",
+                "description": "Ordonnancement optimal des machines pour l'execution des taches non simultanées",
+                "icon": "⚙️",
+                "category": "Production & Manifacturing",
+                "key": "machine_scheduling"
+            },
         ]
 
         # Créer les boutons de projets
@@ -318,7 +325,8 @@ class ProfessionalHub(QMainWindow):
             "loan_interest": self.open_loan_interest,
             "ambulance_placement": self.open_ambulance_placement,
             "lab_experiments": self.open_lab_experiments,
-            "gas_distribution": self.open_gas_distribution
+            "gas_distribution": self.open_gas_distribution,
+            "machine_scheduling": self.open_machine_scheduling,
         }
 
         if project_key in project_methods:
@@ -329,7 +337,7 @@ class ProfessionalHub(QMainWindow):
     def open_loan_interest(self):
         """Ouvre le projet Oumayma - Taux d'intérêt"""
         try:
-            from Oumayma.ui import MainWindow
+            from Oumayma.ui.main_window import MainWindow
 
             if "loan" not in self.projects_windows or not self.projects_windows["loan"].isVisible():
                 self.projects_windows["loan"] = MainWindow()
@@ -337,6 +345,22 @@ class ProfessionalHub(QMainWindow):
             else:
                 self.projects_windows["loan"].raise_()
                 self.projects_windows["loan"].activateWindow()
+        except ImportError as e:
+            print(f"Erreur d'import: {e}")
+            print("→ Vérifiez que le fichier Oumayma/main.py existe et contient une classe MainWindow")
+        except Exception as e:
+            print(f"Erreur lors de l'ouverture: {e}")
+    def open_machine_scheduling(self):
+        """Ouvre le projet Amal - """
+        try:
+            from Amal.src.gui.main_window import MainWindow
+
+            if "loan" not in self.projects_windows or not self.projects_windows["machine"].isVisible():
+                self.projects_windows["machine"] = MainWindow()
+                self.projects_windows["machine"].show()
+            else:
+                self.projects_windows["machine"].raise_()
+                self.projects_windows["machine"].activateWindow()
         except ImportError as e:
             print(f"Erreur d'import: {e}")
             print("→ Vérifiez que le fichier Oumayma/main.py existe et contient une classe MainWindow")
