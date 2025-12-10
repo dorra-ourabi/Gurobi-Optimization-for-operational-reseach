@@ -1,0 +1,564 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1400</width>
+    <height>1000</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>🚑 Placement Optimal d'Ambulances - Optimisation Intelligente</string>
+  </property>
+
+  <!-- Style global moderne avec dégradés et couleurs vives -->
+  <property name="styleSheet">
+    <string notr="true">
+/* === STYLE GLOBAL === */
+QMainWindow {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
+                                stop:0 #E3F2FD, stop:0.5 #BBDEFB, stop:1 #90CAF9);
+    font-family: 'Segoe UI', 'Roboto', 'Arial', sans-serif;
+}
+
+/* === GROUPBOX === */
+QGroupBox {
+    font-size: 14pt;
+    font-weight: bold;
+    border: 2px solid #1976D2;
+    border-radius: 15px;
+    margin-top: 20px;
+    padding: 20px;
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+                                stop:0 #FFFFFF, stop:1 #F5F5F5);
+    color: #1565C0;
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    subcontrol-position: top left;
+    padding: 5px 15px;
+    background-color: #1976D2;
+    color: white;
+    border-radius: 8px;
+    margin-left: 10px;
+}
+
+/* === BOUTONS === */
+QPushButton {
+    background-color: #42A5F5;
+    border: 1px solid #1976D2;
+    border-radius: 6px;
+    padding: 6px 15px;
+    color: white;
+    font-weight: normal;
+    font-size: 10pt;
+    min-height: 28px;
+}
+
+QPushButton:hover {
+    background-color: #64B5F6;
+    border: 1px solid #0D47A1;
+}
+
+QPushButton:pressed {
+    background-color: #1976D2;
+}
+
+QPushButton#btnOptimize {
+    background-color: #66BB6A;
+    border: 1px solid #43A047;
+    font-size: 11pt;
+    font-weight: bold;
+    min-height: 40px;
+    padding: 10px;
+}
+
+QPushButton#btnOptimize:hover {
+    background-color: #81C784;
+    border: 1px solid #2E7D32;
+}
+
+QPushButton#btnAddSite, QPushButton#btnAddZone {
+    background-color: #66BB6A;
+    border: 1px solid #43A047;
+}
+
+QPushButton#btnAddSite:hover, QPushButton#btnAddZone:hover {
+    background-color: #81C784;
+}
+
+QPushButton#btnRemoveSite, QPushButton#btnRemoveZone {
+    background-color: #EF5350;
+    border: 1px solid #E53935;
+}
+
+QPushButton#btnRemoveSite:hover, QPushButton#btnRemoveZone:hover {
+    background-color: #F44336;
+}
+
+/* === TABLEAUX === */
+QTableWidget {
+    background-color: #FFFFFF;
+    border: 2px solid #90CAF9;
+    border-radius: 10px;
+    gridline-color: #E1F5FE;
+    selection-background-color: #64B5F6;
+    font-size: 10pt;
+}
+
+QTableWidget::item {
+    padding: 8px;
+}
+
+QTableWidget::item:selected {
+    background-color: #42A5F5;
+    color: white;
+}
+
+QTableWidget::item:alternate {
+    background-color: #E3F2FD;
+}
+
+QHeaderView::section {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+                                stop:0 #1976D2, stop:1 #1565C0);
+    color: white;
+    padding: 10px;
+    border: 1px solid #0D47A1;
+    font-weight: bold;
+    font-size: 10pt;
+}
+
+QHeaderView::section:hover {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+                                stop:0 #2196F3, stop:1 #1976D2);
+}
+
+/* === LABELS === */
+QLabel {
+    font-size: 11pt;
+    color: #263238;
+    font-weight: 500;
+}
+
+/* === COMBOBOX === */
+QComboBox {
+    border: 2px solid #90CAF9;
+    border-radius: 8px;
+    padding: 8px;
+    background-color: white;
+    font-size: 10pt;
+    min-height: 30px;
+}
+
+QComboBox:hover {
+    border: 2px solid #42A5F5;
+}
+
+QComboBox::drop-down {
+    border: none;
+    width: 30px;
+}
+
+QComboBox QAbstractItemView {
+    border: 2px solid #90CAF9;
+    selection-background-color: #42A5F5;
+    background-color: white;
+}
+
+/* === SPINBOX === */
+QSpinBox, QDoubleSpinBox {
+    border: 2px solid #90CAF9;
+    border-radius: 8px;
+    padding: 8px;
+    background-color: white;
+    font-size: 10pt;
+    min-height: 30px;
+}
+
+QSpinBox:hover, QDoubleSpinBox:hover {
+    border: 2px solid #42A5F5;
+}
+
+QSpinBox:focus, QDoubleSpinBox:focus {
+    border: 2px solid #1976D2;
+}
+
+/* === ZONE DE TEXTE === */
+QTextEdit {
+    background-color: #FFFFFF;
+    border: 2px solid #90CAF9;
+    border-radius: 10px;
+    padding: 15px;
+    font-family: 'Consolas', 'Monaco', monospace;
+    font-size: 10pt;
+    color: #263238;
+}
+
+/* === SCROLLBAR === */
+QScrollBar:vertical {
+    border: none;
+    background: #E3F2FD;
+    width: 12px;
+    border-radius: 6px;
+}
+
+QScrollBar::handle:vertical {
+    background: #90CAF9;
+    border-radius: 6px;
+    min-height: 20px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background: #64B5F6;
+}
+
+QScrollBar:horizontal {
+    border: none;
+    background: #E3F2FD;
+    height: 12px;
+    border-radius: 6px;
+}
+
+QScrollBar::handle:horizontal {
+    background: #90CAF9;
+    border-radius: 6px;
+    min-width: 20px;
+}
+
+QScrollBar::handle:horizontal:hover {
+    background: #64B5F6;
+}
+    </string>
+  </property>
+
+  <widget class="QWidget" name="centralwidget">
+   <!-- AJOUT DU SCROLL AREA POUR TOUT LE CONTENU -->
+   <layout class="QVBoxLayout" name="mainLayout">
+    <property name="spacing">
+     <number>0</number>
+    </property>
+    <property name="leftMargin">
+     <number>0</number>
+    </property>
+    <property name="topMargin">
+     <number>0</number>
+    </property>
+    <property name="rightMargin">
+     <number>0</number>
+    </property>
+    <property name="bottomMargin">
+     <number>0</number>
+    </property>
+
+    <item>
+     <widget class="QScrollArea" name="scrollArea">
+      <property name="widgetResizable">
+       <bool>true</bool>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">
+        QScrollArea {
+         border: none;
+         background: transparent;
+        }
+       </string>
+      </property>
+      <widget class="QWidget" name="scrollAreaWidgetContents">
+       <layout class="QVBoxLayout" name="verticalLayout_main">
+        <property name="spacing">
+         <number>15</number>
+        </property>
+        <property name="leftMargin">
+         <number>20</number>
+        </property>
+        <property name="topMargin">
+         <number>20</number>
+        </property>
+        <property name="rightMargin">
+         <number>20</number>
+        </property>
+        <property name="bottomMargin">
+         <number>20</number>
+        </property>
+
+    <!-- TITRE PRINCIPAL -->
+    <item>
+     <widget class="QLabel" name="labelTitle">
+      <property name="text">
+       <string>🚑 Système d'Optimisation de Placement d'Ambulances</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">
+        font-size: 20pt;
+        font-weight: bold;
+        color: #0D47A1;
+        padding: 15px;
+        background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+                                    stop:0 #FFFFFF, stop:0.5 #E3F2FD, stop:1 #FFFFFF);
+        border-radius: 15px;
+        border: 2px solid #1976D2;
+       </string>
+      </property>
+     </widget>
+    </item>
+
+    <!-- SITES POTENTIELS -->
+    <item>
+     <widget class="QGroupBox" name="groupSites">
+      <property name="title">
+       <string>Sites Potentiels</string>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout_sites">
+       <item>
+        <widget class="QTableWidget" name="tableSites">
+         <property name="minimumHeight">
+          <number>250</number>
+         </property>
+         <property name="maximumHeight">
+          <number>400</number>
+         </property>
+         <property name="alternatingRowColors">
+          <bool>true</bool>
+         </property>
+         <property name="toolTip">
+          <string>Liste des sites où les ambulances peuvent être installées</string>
+         </property>
+         <column>
+          <property name="text"><string>Nom du Site</string></property>
+         </column>
+         <column>
+          <property name="text"><string>X (km)</string></property>
+         </column>
+         <column>
+          <property name="text"><string>Y (km)</string></property>
+         </column>
+         <column>
+          <property name="text"><string>Capacité Max</string></property>
+         </column>
+        </widget>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="layout_buttons_sites">
+         <item>
+          <widget class="QPushButton" name="btnAddSite">
+           <property name="text"><string>Ajouter Site</string></property>
+           <property name="toolTip"><string>Ajouter un nouveau site</string></property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="btnRemoveSite">
+           <property name="text"><string>Supprimer Site</string></property>
+           <property name="toolTip"><string>Supprimer le site sélectionné</string></property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </widget>
+    </item>
+
+    <!-- ZONES À COUVRIR -->
+    <item>
+     <widget class="QGroupBox" name="groupZones">
+      <property name="title">
+       <string>Zones à Couvrir</string>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout_zones">
+       <item>
+        <widget class="QTableWidget" name="tableZones">
+         <property name="minimumHeight">
+          <number>250</number>
+         </property>
+         <property name="maximumHeight">
+          <number>400</number>
+         </property>
+         <property name="alternatingRowColors">
+          <bool>true</bool>
+         </property>
+         <property name="toolTip">
+          <string>Liste des zones à couvrir avec leur population</string>
+         </property>
+         <column>
+          <property name="text"><string>Nom de la Zone</string></property>
+         </column>
+         <column>
+          <property name="text"><string>X (km)</string></property>
+         </column>
+         <column>
+          <property name="text"><string>Y (km)</string></property>
+         </column>
+         <column>
+          <property name="text"><string>Population</string></property>
+         </column>
+         <column>
+          <property name="text"><string>Priorité</string></property>
+         </column>
+        </widget>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="layout_buttons_zones">
+         <item>
+          <widget class="QPushButton" name="btnAddZone">
+           <property name="text"><string>Ajouter Zone</string></property>
+           <property name="toolTip"><string>Ajouter une nouvelle zone</string></property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="btnRemoveZone">
+           <property name="text"><string>Supprimer Zone</string></property>
+           <property name="toolTip"><string>Supprimer la zone sélectionnée</string></property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </widget>
+    </item>
+
+    <!-- PARAMÈTRES DU MODÈLE -->
+    <item>
+     <widget class="QGroupBox" name="groupParameters">
+      <property name="title">
+       <string>Paramètres du Modèle d'Optimisation</string>
+      </property>
+      <layout class="QGridLayout" name="gridLayoutParameters">
+       <property name="horizontalSpacing">
+        <number>20</number>
+       </property>
+       <property name="verticalSpacing">
+        <number>15</number>
+       </property>
+
+       <!-- Mode de décision -->
+       <item row="0" column="0">
+        <widget class="QLabel" name="labelMode">
+         <property name="text"><string>Mode de Décision :</string></property>
+         <property name="toolTip"><string>Choisissez le type de variables de décision</string></property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QComboBox" name="comboModeDecision">
+         <property name="toolTip"><string>Binaire : 0 ou 1 ambulance par site&#x0a;Entier : nombre quelconque d'ambulances par site</string></property>
+         <item>
+          <property name="text"><string>🔘 Binaire (Installer ou Non)</string></property>
+         </item>
+         <item>
+          <property name="text"><string>🔢 Entier (Nombre d'Ambulances)</string></property>
+         </item>
+        </widget>
+       </item>
+
+       <!-- Total ambulances -->
+       <item row="0" column="2">
+        <widget class="QLabel" name="labelTotalAmb">
+         <property name="text"><string>🚑 Total d'Ambulances :</string></property>
+         <property name="toolTip"><string>Budget total d'ambulances disponibles</string></property>
+        </widget>
+       </item>
+       <item row="0" column="3">
+        <widget class="QSpinBox" name="spinTotalAmbulances">
+         <property name="minimum"><number>1</number></property>
+         <property name="maximum"><number>500</number></property>
+         <property name="value"><number>5</number></property>
+         <property name="toolTip"><string>Nombre total d'ambulances à placer</string></property>
+        </widget>
+       </item>
+
+       <!-- Distance max -->
+       <item row="1" column="0">
+        <widget class="QLabel" name="labelMaxDist">
+         <property name="text"><string>Distance Max de Couverture (km) :</string></property>
+         <property name="toolTip"><string>Distance maximale pour qu'une ambulance puisse couvrir une zone</string></property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QDoubleSpinBox" name="spinMaxDistance">
+         <property name="minimum"><double>0.1</double></property>
+         <property name="maximum"><double>10000.0</double></property>
+         <property name="value"><double>5.0</double></property>
+         <property name="decimals"><number>1</number></property>
+         <property name="singleStep"><double>0.5</double></property>
+         <property name="toolTip"><string>Rayon de couverture en kilomètres</string></property>
+        </widget>
+       </item>
+
+      </layout>
+     </widget>
+    </item>
+
+    <!-- BOUTON OPTIMISATION -->
+    <item>
+     <widget class="QPushButton" name="btnOptimize">
+      <property name="text"><string>LANCER L'OPTIMISATION</string></property>
+      <property name="toolTip"><string>Cliquez pour calculer le placement optimal des ambulances</string></property>
+     </widget>
+    </item>
+
+    <!-- RÉSULTATS  -->
+    <item>
+     <widget class="QGroupBox" name="groupResults">
+      <property name="title">
+       <string>Résultats de l'Optimisation</string>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout_results">
+       <item>
+        <widget class="QTextEdit" name="textResults">
+         <property name="minimumHeight">
+          <number>300</number>
+         </property>
+         <property name="maximumHeight">
+          <number>500</number>
+         </property>
+         <property name="readOnly">
+          <bool>true</bool>
+         </property>
+         <property name="placeholderText">
+          <string>Les résultats de l'optimisation s'afficheront ici...</string>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">
+           QTextEdit {
+            font-size: 10pt;
+            line-height: 1.4;
+           }
+          </string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+
+   </layout>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+
+  <!-- BARRE DE STATUT -->
+  <widget class="QStatusBar" name="statusbar">
+   <property name="styleSheet">
+    <string notr="true">
+     QStatusBar {
+      background-color: #1976D2;
+      color: white;
+      font-weight: bold;
+      padding: 5px;
+     }
+    </string>
+   </property>
+  </widget>
+
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
