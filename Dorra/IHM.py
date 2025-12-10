@@ -345,9 +345,3 @@ class MainWindow(QMainWindow):
         nx.draw(G,pos,ax=self.ax,node_color='lightblue',with_labels=True,arrows=True,edge_color=colors,arrowstyle='-|>',arrowsize=20)
         self.canvas.draw()
 
-# --- MAIN ---
-if __name__=="__main__":
-    app = QApplication(sys.argv)
-    window = MainWindow()
-    window.show()
-    sys.exit(app.exec())
