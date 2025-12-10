@@ -1,0 +1,159 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{hyperref}
+\usepackage{geometry}
+
+\geometry{
+ a4paper,
+ total={170mm,257mm},
+ left=20mm,
+ top=20mm,
+}
+
+\lstset{
+  language=Python,
+  basicstyle=\ttfamily\footnotesize,
+  commentstyle=\color{gray},
+  keywordstyle=\color{blue}\bfseries,
+  stringstyle=\color{red},
+  numbers=left,
+  numberstyle=\tiny\color{gray},
+  breaklines=true,
+  showstringspaces=false
+}
+
+\title{Rapport de TP : Ordonnancement de Tâches par Coloration de Graphe et PLNE}
+\author{Étudiant : [Votre Nom] \\ Module : [Nom du Module/Cours]}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+Ce rapport présente la modélisation et la résolution d'un problème d'ordonnancement de tâches sur des machines parallèles, en présence de contraintes de conflits (incompatibilités d'exécution simultanée) et de capacité (volume et temps). Le problème est formulé comme une extension du problème de \textbf{coloration de graphe}, puis résolu au moyen de la \textbf{Programmation Linéaire en Nombres Entiers (PLNE)} à l'aide du solveur Gurobi. Deux formulations distinctes sont étudiées : l'Assignation Directe et la Couverture par Ensembles (Set Covering).
+\end{abstract}
+
+\tableofcontents
+
+\newpage
+
+\section{Introduction et Problématique}
+
+Le problème étudié consiste à assigner un ensemble de tâches $T$ à un nombre minimal de machines $M$, en respectant principalement deux types de contraintes :
+
+\begin{enumerate}
+    \item \textbf{Contraintes de conflit :} Deux tâches $t_i$ et $t_j$ ne peuvent pas s'exécuter sur la même machine si elles sont en conflit. Ce type de contrainte est naturellement modélisé par le problème NP-difficile de la \textbf{coloration de graphe}, où les sommets représentent les tâches et les arêtes les conflits. Le nombre minimal de machines correspond alors au nombre chromatique $\chi(G)$.
+    
+    \item \textbf{Contraintes de capacité :} Chaque machine $m$ possède des capacités maximales :
+    \begin{itemize}
+        \item une capacité en \textbf{volume} (nombre maximal de tâches supportées),
+        \item une capacité en \textbf{temps} (charge totale en durée).
+    \end{itemize}
+\end{enumerate}
+
+L'objectif global est de minimiser le nombre total de machines utilisées :
+
+\[
+Z = \min \sum_{m=1}^{|M|} y_m.
+\]
+
+\section{Modèle I : Assignation Directe (Coloration de Graphe Étendue)}
+
+Ce modèle repose sur une assignation explicite tâche-machine, tout en intégrant les contraintes de capacité et un renforcement basé sur les cliques maximales du graphe de conflit.
+
+\subsection{Variables de Décision}
+
+\begin{itemize}
+    \item $x_{t,m} \in \{0,1\}$ : vaut 1 si la tâche $t$ est assignée à la machine $m$.
+    \item $y_m \in \{0,1\}$ : vaut 1 si la machine $m$ est utilisée.
+\end{itemize}
+
+\subsection{Contraintes Fondamentales}
+
+\subsubsection{Assignation des tâches (C1)}
+Chaque tâche doit être assignée à une machine :
+
+\[
+\sum_{m=1}^{|M|} x_{t,m} = 1 \quad \forall t \in T.
+\]
+
+\subsubsection{Contraintes de conflit renforcées par les cliques (C2)}
+Pour toute clique $C$ du graphe $G$ et pour toute machine $m$ :
+
+\[
+\sum_{t \in C} x_{t,m} \le y_m.
+\]
+
+Cette formulation est plus forte que les simples contraintes binaires par arête.
+
+\subsubsection{Contraintes de capacité}
+
+\paragraph{Capacité en volume (C5)}
+\[
+\sum_{t \in T} x_{t,m} \le \text{CapacitéVol}_m \cdot y_m.
+\]
+
+\paragraph{Capacité en temps (C6)}
+\[
+\sum_{t \in T} \text{durée}_t \cdot x_{t,m} \le \text{CapacitéTemps}_m \cdot y_m.
+\]
+
+\subsection{Optimisations du Modèle}
+
+\begin{enumerate}
+    \item \textbf{Borne supérieure} basée sur le degré maximal du graphe (théorème de Brooks).
+    \item \textbf{Brisure de symétrie} : imposition d'un ordre sur les machines ($y_1 \ge y_2 \ge \dots$).
+    \item \textbf{Warm start} : initialisation avec une solution gloutonne pour accélérer la convergence.
+\end{enumerate}
+
+\section{Modèle II : Set Covering (Couverture par Ensembles Indépendants)}
+
+Cette formulation repose sur l'idée que chaque machine correspond à un ensemble indépendant maximal du graphe de conflit.
+
+\subsection{Variables}
+
+\[
+z_i \in \{0,1\} \quad \text{(sélection de l'ensemble indépendant $S_i$)}.
+\]
+
+\subsection{Contrainte de couverture}
+
+Chaque tâche doit appartenir à au moins un ensemble sélectionné :
+
+\[
+\sum_{i : t \in S_i} z_i \ge 1 \quad \forall t \in T.
+\]
+
+\section{Implémentation Python (Gurobi)}
+
+L’implémentation est organisée dans la classe \texttt{MachineScheduler}.
+
+\subsection{Extrait : Modèle Assignation}
+
+\lstinputlisting[firstline=104,lastline=125]{temp.py}
+
+\subsection{Extrait : Modèle Set Covering}
+
+\lstinputlisting[firstline=177,lastline=216]{temp.py}
+
+\section{Conclusion et Perspectives}
+
+Le modèle d'Assignation Directe est plus adapté lorsque les contraintes de capacité doivent être modélisées précisément pour chaque machine, mais il génère un plus grand nombre de variables. Le modèle Set Covering est quant à lui plus efficace structurellement pour des graphes de grande taille, au prix d’une moindre flexibilité vis-à-vis des capacités.
+
+Enfin, si les tâches sont exécutables en parallèle sur une même machine (capacité temporelle non cumulative), la contrainte temporelle devient :
+
+\[
+\text{durée}_t \cdot x_{t,m} \le \text{CapacitéTemps}_m \cdot y_m,
+\]
+
+ce qui correspond à un modèle d'éligibilité plutôt qu'à une contrainte de somme.
+
+\end{document}
